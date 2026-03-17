@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ShieldAlert, ArrowRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 const containerVariants = {
@@ -28,13 +29,21 @@ const HeroSection = ({ onInsuranceClick }: HeroSectionProps) => {
       className="grid grid-cols-12 gap-8 py-8"
     >
       <motion.div variants={itemVariants} className="col-span-12 lg:col-span-8 flex flex-col justify-center">
-        <p className="text-caps mb-4">Personal Data Exposure Report</p>
+        <div className="flex items-center gap-3 mb-5">
+          <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20 text-xs font-semibold px-3 py-1">
+            Critical Risk
+          </Badge>
+          <span className="text-body text-xs">Immediate action recommended</span>
+        </div>
         <h1 className="text-display text-4xl lg:text-5xl leading-tight" style={{ textWrap: "balance" as any }}>
-          Your digital footprint has been compromised.
+          Your data is exposed.
         </h1>
-        <p className="text-body text-lg mt-4 max-w-2xl">
+        <p className="text-body text-lg mt-4 max-w-2xl leading-relaxed">
           We found your personal information across multiple breach sources.
-          Immediate action is recommended to protect your accounts and identity.
+          Some of this data can be used for fraud or identity misuse.
+        </p>
+        <p className="text-body text-xs mt-6 opacity-60">
+          Updated recently based on latest breach intelligence
         </p>
       </motion.div>
 

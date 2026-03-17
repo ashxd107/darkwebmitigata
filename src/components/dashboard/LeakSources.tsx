@@ -11,7 +11,7 @@ const leaks = [
     title: "Malware Log Exposure",
     date: "Mar 15, 2026",
     domain: "email-provider.com",
-    summary: "Username, password, and device information",
+    summary: "Your login credentials were found in a malware data dump.",
     risk: "Critical" as const,
     details: {
       username: "john.d****@email.com",
@@ -28,7 +28,7 @@ const leaks = [
     title: "Data Breach – Social Platform",
     date: "Mar 10, 2026",
     domain: "social-network.com",
-    summary: "Email address and hashed password",
+    summary: "Your email and hashed password were part of a platform-wide breach.",
     risk: "High" as const,
     details: {
       username: "john.d****",
@@ -45,7 +45,7 @@ const leaks = [
     title: "Session Hijack Risk",
     date: "Mar 8, 2026",
     domain: "shopping-site.com",
-    summary: "Browser cookies and session tokens",
+    summary: "Browser cookies and session tokens were exposed, risking account takeover.",
     risk: "High" as const,
     details: {
       username: "j.doe****",
@@ -62,7 +62,7 @@ const leaks = [
     title: "Credential Dump",
     date: "Feb 28, 2026",
     domain: "cloud-storage.io",
-    summary: "Login credentials and access tokens",
+    summary: "Login credentials and access tokens appeared in a public credential dump.",
     risk: "Medium" as const,
     details: {
       username: "johndoe****",
@@ -101,14 +101,14 @@ const LeakSources = () => {
             className="card-surface flex flex-col sm:flex-row sm:items-center gap-4"
           >
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 mb-1">
+              <div className="flex items-center gap-3 mb-1.5">
                 <h3 className="text-display text-sm">{leak.title}</h3>
                 <Badge variant="outline" className={`text-[10px] font-medium ${riskStyles[leak.risk]}`}>
                   {leak.risk}
                 </Badge>
               </div>
-              <p className="text-body text-sm">{leak.summary}</p>
-              <div className="flex gap-4 mt-2">
+              <p className="text-body text-sm leading-relaxed">{leak.summary}</p>
+              <div className="flex gap-4 mt-2.5">
                 <span className="text-caps">{leak.domain}</span>
                 <span className="text-caps">{leak.date}</span>
               </div>
