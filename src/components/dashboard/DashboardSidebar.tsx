@@ -66,15 +66,6 @@ const DashboardSidebar = ({ activeItem, onNavigate, onInsuranceClick }: Dashboar
             Monitoring your exposure across breach databases.
           </p>
         </div>
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={onInsuranceClick}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm transition-colors"
-        >
-          <Heart className="h-5 w-5" strokeWidth={1.5} />
-          <span>Get Insurance</span>
-        </motion.button>
       </div>
     </aside>
   );
