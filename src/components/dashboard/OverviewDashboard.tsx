@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import {
-  ShieldAlert,
   ArrowRight,
   AlertTriangle,
   Key,
@@ -13,8 +12,10 @@ import {
   Lock,
   ShieldCheck,
   CreditCard,
+  ShieldAlert,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import RiskScoreMeter from "./RiskScoreMeter";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 10 },
@@ -75,32 +76,33 @@ const riskBadge: Record<string, string> = {
 const OverviewDashboard = ({ onInsuranceClick, onNavigate }: OverviewDashboardProps) => {
   return (
     <motion.div variants={stagger} initial="hidden" animate="visible" className="py-6 space-y-5">
-      {/* ROW 1: Hero + CTA */}
-      <div className="grid grid-cols-12 gap-5">
-        <motion.div variants={fadeIn} className="col-span-12 lg:col-span-8 flex flex-col justify-center">
-          <div className="flex items-center gap-3 mb-3">
-            <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20 text-[11px] font-semibold px-2.5 py-0.5">
-              Critical Risk
-            </Badge>
-            <span className="text-body text-xs">Immediate action recommended</span>
-          </div>
-          <h1 className="text-display text-3xl lg:text-4xl leading-tight">
-            Your data is exposed.
-          </h1>
-          <p className="text-body text-sm mt-2 max-w-xl">
-            Personal information found across multiple breach sources — including passwords, sessions, and identity data.
-          </p>
+      {/* ROW 1: Identity + Score Meter + CTA */}
+      <motion.div variants={fadeIn} className="grid grid-cols-12 gap-5">
+        {/* LEFT: User Identity */}
+        <div className="col-span-12 lg:col-span-3 flex flex-col justify-center">
+          <p className="text-caps mb-2">Personal Exposure Report</p>
+          <h2 className="text-display text-xl leading-tight">Rahul Sharma</h2>
+          <p className="text-body text-sm mt-1">+91 98XXXXXX10</p>
           <p className="text-body text-[11px] mt-3 opacity-50">
-            Updated based on latest breach intelligence
+            Your data has been found across multiple breach sources
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div variants={fadeIn} className="col-span-12 lg:col-span-4">
+        {/* CENTER: Risk Score Meter */}
+        <div className="col-span-12 lg:col-span-5 flex flex-col items-center justify-center">
+          <RiskScoreMeter score={82} />
+          <p className="text-body text-xs mt-2 text-center">
+            Immediate action is recommended
+          </p>
+        </div>
+
+        {/* RIGHT: CTA Card */}
+        <div className="col-span-12 lg:col-span-4">
           <div className="bg-foreground text-card p-6 rounded-[20px] h-full flex flex-col justify-center">
             <ShieldAlert className="h-6 w-6 mb-3 text-primary" strokeWidth={1.5} />
-            <h3 className="text-sm font-semibold mb-1">Protect yourself</h3>
+            <h3 className="text-sm font-semibold mb-1">Reduce your risk</h3>
             <p className="text-xs opacity-60 mb-4 leading-relaxed">
-              Financial protection against fraud and identity theft.
+              Your exposed data can be used for fraud or identity misuse.
             </p>
             <Button
               onClick={onInsuranceClick}
@@ -111,8 +113,8 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate }: OverviewDashboardPr
               <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
             </Button>
           </div>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
 
       {/* ROW 2: Metric Cards */}
       <motion.div variants={fadeIn} className="grid grid-cols-4 gap-4">
@@ -144,7 +146,7 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate }: OverviewDashboardPr
             <div className="grid grid-cols-2 gap-3">
               {exposureItems.map((item) => (
                 <div key={item.label} className="flex items-center gap-2.5 py-1.5">
-                  <div className="h-7 w-7 rounded-lg bg-primary/8 flex items-center justify-center shrink-0">
+                  <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                     <item.icon className="h-3.5 w-3.5 text-primary" strokeWidth={1.5} />
                   </div>
                   <span className="text-body text-xs leading-snug">{item.label}</span>
