@@ -1,7 +1,6 @@
 import { useState } from "react";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
-import HeroSection from "@/components/dashboard/HeroSection";
-import MetricCards from "@/components/dashboard/MetricCards";
+import OverviewDashboard from "@/components/dashboard/OverviewDashboard";
 import ExposureSection from "@/components/dashboard/ExposureSection";
 import LeakSources from "@/components/dashboard/LeakSources";
 import AffectedWebsites from "@/components/dashboard/AffectedWebsites";
@@ -14,23 +13,14 @@ const Index = () => {
   const [activeItem, setActiveItem] = useState("overview");
   const [insuranceOpen, setInsuranceOpen] = useState(false);
 
-  const handleInsuranceNav = () => {
-    setActiveItem("insurance");
-  };
-
   const renderContent = () => {
     switch (activeItem) {
       case "overview":
         return (
-          <>
-            <HeroSection onInsuranceClick={() => setInsuranceOpen(true)} />
-            <div className="space-y-14 mt-10">
-              <MetricCards />
-              <ExposureSection />
-              <LeakSources />
-              <AffectedWebsites />
-            </div>
-          </>
+          <OverviewDashboard
+            onInsuranceClick={() => setInsuranceOpen(true)}
+            onNavigate={setActiveItem}
+          />
         );
       case "exposure":
         return (
@@ -67,10 +57,10 @@ const Index = () => {
       <DashboardSidebar
         activeItem={activeItem}
         onNavigate={setActiveItem}
-        onInsuranceClick={handleInsuranceNav}
+        onInsuranceClick={() => setActiveItem("insurance")}
       />
 
-      <main className="ml-[260px] px-8 lg:px-12 py-6 pb-32 max-w-[1200px]">
+      <main className="ml-[260px] px-8 lg:px-12 py-4 pb-24 max-w-[1200px]">
         {renderContent()}
       </main>
 
