@@ -1,12 +1,10 @@
-import { Shield, Eye, Database, Monitor, Lightbulb, Heart, LayoutDashboard } from "lucide-react";
+import { Shield, Eye, Database, Lightbulb, Heart, LayoutDashboard } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState } from "react";
 
 const menuItems = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
   { id: "exposure", label: "Exposure", icon: Eye },
   { id: "leak-sources", label: "Leak Sources", icon: Database },
-  { id: "devices", label: "Devices", icon: Monitor },
   { id: "recommendations", label: "Recommendations", icon: Lightbulb },
 ];
 
@@ -18,7 +16,7 @@ interface DashboardSidebarProps {
 
 const DashboardSidebar = ({ activeItem, onNavigate, onInsuranceClick }: DashboardSidebarProps) => {
   return (
-    <aside className="fixed left-0 top-0 bottom-0 w-[260px] bg-card border-r border-border/30 flex flex-col z-40">
+    <aside className="fixed left-0 top-0 bottom-0 w-[260px] bg-card border-r border-border/20 flex flex-col z-40">
       <div className="p-6 pb-4">
         <div className="flex items-center gap-3">
           <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -28,7 +26,7 @@ const DashboardSidebar = ({ activeItem, onNavigate, onInsuranceClick }: Dashboar
         </div>
       </div>
 
-      <nav className="flex-1 px-3 py-2">
+      <nav className="flex-1 px-3 py-4">
         <p className="text-caps px-3 mb-3">Menu</p>
         <ul className="space-y-1">
           {menuItems.map((item) => {
@@ -62,7 +60,12 @@ const DashboardSidebar = ({ activeItem, onNavigate, onInsuranceClick }: Dashboar
         </ul>
       </nav>
 
-      <div className="p-4">
+      <div className="p-4 space-y-3">
+        <div className="px-3">
+          <p className="text-body text-[11px] leading-snug">
+            Monitoring your exposure across breach databases.
+          </p>
+        </div>
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}

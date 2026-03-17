@@ -1,58 +1,79 @@
 import { motion } from "framer-motion";
-import { User, Monitor, Globe } from "lucide-react";
+import { User, Globe, Monitor } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const categories = [
   {
+    id: "credentials",
     title: "Account Credentials",
     icon: User,
     items: ["Username exposed", "Password exposed", "Login URLs identified"],
   },
   {
-    title: "Device Information",
-    icon: Monitor,
-    items: ["IP address detected", "Operating system identified", "Device name found", "Location approximated"],
+    id: "personal",
+    title: "Personal Information",
+    icon: Globe,
+    items: ["Email address found in breaches", "Phone number detected", "Physical address partially exposed"],
   },
   {
-    title: "Session Data",
-    icon: Globe,
-    items: ["Browser cookies found", "Active sessions may be compromised"],
+    id: "device-session",
+    title: "Device & Session Data",
+    icon: Monitor,
+    items: [
+      "IP address detected",
+      "Operating system identified",
+      "Device name found",
+      "Location approximated",
+      "Browser cookies found",
+      "Active sessions may be compromised",
+    ],
   },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.2, 0.8, 0.2, 1] as const } },
-};
-
 const ExposureSection = () => {
   return (
-    <motion.section variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+    <motion.section
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.5 }}
+    >
       <p className="text-caps mb-2">What Was Exposed</p>
       <h2 className="text-display text-2xl mb-6">Your compromised information</h2>
-      <div className="grid md:grid-cols-3 gap-5">
-        {categories.map((cat) => (
-          <motion.div key={cat.title} variants={cardVariants} className="card-surface">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                <cat.icon className="h-5 w-5 text-primary" strokeWidth={1.5} />
-              </div>
-              <h3 className="text-display text-sm">{cat.title}</h3>
-            </div>
-            <ul className="space-y-3">
-              {cat.items.map((item) => (
-                <li key={item} className="flex items-start gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-risk-mid mt-2 shrink-0" />
-                  <span className="text-body text-sm">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        ))}
+
+      <div className="card-surface !p-0 overflow-hidden">
+        <Accordion type="multiple" defaultValue={["credentials", "personal", "device-session"]}>
+          {categories.map((cat) => (
+            <AccordionItem key={cat.id} value={cat.id} className="border-border/30 last:border-b-0">
+              <AccordionTrigger className="px-6 py-5 hover:no-underline hover:bg-secondary/30">
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <cat.icon className="h-4.5 w-4.5 text-primary" strokeWidth={1.5} />
+                  </div>
+                  <span className="text-display text-sm">{cat.title}</span>
+                  <span className="text-muted-foreground text-xs font-normal ml-1">
+                    {cat.items.length} items
+                  </span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-6 pb-5">
+                <ul className="space-y-2.5 pl-12">
+                  {cat.items.map((item) => (
+                    <li key={item} className="flex items-start gap-2.5">
+                      <div className="h-1.5 w-1.5 rounded-full bg-risk-mid mt-2 shrink-0" />
+                      <span className="text-body text-sm">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </div>
     </motion.section>
   );
