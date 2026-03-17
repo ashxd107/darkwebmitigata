@@ -22,7 +22,7 @@ const DashboardSidebar = ({ activeItem, onNavigate, onInsuranceClick }: Dashboar
           <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center">
             <Shield className="h-5 w-5 text-primary" />
           </div>
-          <span className="text-display text-lg">CyberGuard</span>
+          <span className="text-display text-lg">Mitigata</span>
         </div>
       </div>
 
