@@ -1,16 +1,42 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
+import HeroSection from "@/components/dashboard/HeroSection";
+import MetricCards from "@/components/dashboard/MetricCards";
+import ExposureSection from "@/components/dashboard/ExposureSection";
+import LeakSources from "@/components/dashboard/LeakSources";
+import AffectedWebsites from "@/components/dashboard/AffectedWebsites";
+import Recommendations from "@/components/dashboard/Recommendations";
+import StickyCTA from "@/components/dashboard/StickyCTA";
+import InsuranceFlow from "@/components/dashboard/InsuranceFlow";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+const Index = () => {
+  const [activeItem, setActiveItem] = useState("overview");
+  const [insuranceOpen, setInsuranceOpen] = useState(false);
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
+    <div className="min-h-screen bg-background">
+      <DashboardSidebar
+        activeItem={activeItem}
+        onNavigate={setActiveItem}
+        onInsuranceClick={() => setInsuranceOpen(true)}
+      />
+
+      <main className="ml-[260px] px-8 lg:px-12 py-6 pb-32 max-w-[1200px]">
+        <HeroSection onInsuranceClick={() => setInsuranceOpen(true)} />
+
+        <div className="space-y-12 mt-8">
+          <MetricCards />
+          <ExposureSection />
+          <LeakSources />
+          <AffectedWebsites />
+          <Recommendations />
+        </div>
+      </main>
+
+      <StickyCTA onClick={() => setInsuranceOpen(true)} />
+      <InsuranceFlow open={insuranceOpen} onClose={() => setInsuranceOpen(false)} />
     </div>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
