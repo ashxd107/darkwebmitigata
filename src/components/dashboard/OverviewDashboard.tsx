@@ -132,30 +132,14 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate }: OverviewDashboardPr
         ))}
       </motion.div>
 
-      {/* ROW 3: Exposure + Top Risks */}
+      {/* ROW 3: Exposure Breakdown + Severity + Top Risks */}
       <div className="grid grid-cols-12 gap-5">
-        <motion.div variants={fadeIn} className="col-span-12 lg:col-span-8">
-          <div className="card-surface !p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-display text-sm">What is exposed</h3>
-              <button
-                onClick={() => onNavigate("exposure")}
-                className="text-[11px] text-muted-foreground hover:text-foreground transition-colors font-medium"
-              >
-                View all →
-              </button>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              {exposureItems.map((item) => (
-                <div key={item.label} className="flex items-center gap-2.5 py-1.5">
-                  <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                    <item.icon className="h-3.5 w-3.5 text-primary" strokeWidth={1.5} />
-                  </div>
-                  <span className="text-body text-xs leading-snug">{item.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+        <motion.div variants={fadeIn} className="col-span-12 lg:col-span-4">
+          <ExposureBreakdownChart />
+        </motion.div>
+
+        <motion.div variants={fadeIn} className="col-span-12 lg:col-span-4">
+          <SeverityDistribution />
         </motion.div>
 
         <motion.div variants={fadeIn} className="col-span-12 lg:col-span-4">
