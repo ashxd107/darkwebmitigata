@@ -1,5 +1,4 @@
-import { Shield, Eye, Database, Lightbulb, Heart, LayoutDashboard } from "lucide-react";
-import { motion } from "framer-motion";
+import { Shield, Eye, Database, Lightbulb, LayoutDashboard } from "lucide-react";
 
 const menuItems = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
@@ -36,22 +35,18 @@ const DashboardSidebar = ({ activeItem, onNavigate, onInsuranceClick }: Dashboar
                 <button
                   onClick={() => onNavigate(item.id)}
                   className={`
-                    w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
-                    transition-all duration-200 relative
+                    w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
+                    transition-all duration-200
                     ${isActive
-                      ? "text-foreground bg-secondary"
-                      : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
+                      ? "bg-primary/8 text-foreground font-semibold shadow-[inset_0_1px_2px_rgba(4,219,127,0.08)]"
+                      : "text-muted-foreground font-medium hover:bg-secondary/60 hover:text-foreground"
                     }
                   `}
                 >
-                  {isActive && (
-                    <motion.div
-                      layoutId="sidebar-active"
-                      className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-primary rounded-r-full"
-                      transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                    />
-                  )}
-                  <item.icon className="h-5 w-5" strokeWidth={1.5} />
+                  <item.icon
+                    className={`h-[18px] w-[18px] shrink-0 ${isActive ? "text-primary" : ""}`}
+                    strokeWidth={isActive ? 2 : 1.5}
+                  />
                   <span>{item.label}</span>
                 </button>
               </li>
