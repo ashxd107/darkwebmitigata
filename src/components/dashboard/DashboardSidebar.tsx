@@ -1,4 +1,5 @@
-import { Shield, Eye, Database, Lightbulb, LayoutDashboard } from "lucide-react";
+import { Eye, Database, Lightbulb, LayoutDashboard } from "lucide-react";
+import mitigataLogo from "@/assets/mitigata-logo.png";
 
 const menuItems = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
