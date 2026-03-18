@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import RiskScoreMeter from "./RiskScoreMeter";
+import ExposureBreakdownChart from "./ExposureBreakdownChart";
+import SeverityDistribution from "./SeverityDistribution";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 10 },
