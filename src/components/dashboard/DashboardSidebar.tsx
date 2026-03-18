@@ -1,4 +1,5 @@
-import { Shield, Eye, Database, Lightbulb, LayoutDashboard } from "lucide-react";
+import { Eye, Database, Lightbulb, LayoutDashboard } from "lucide-react";
+import mitigataLogo from "@/assets/mitigata-logo.png";
 
 const menuItems = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
@@ -17,12 +18,7 @@ const DashboardSidebar = ({ activeItem, onNavigate, onInsuranceClick }: Dashboar
   return (
     <aside className="fixed left-0 top-0 bottom-0 w-[260px] bg-card border-r border-border/20 flex flex-col z-40">
       <div className="p-6 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center">
-            <Shield className="h-5 w-5 text-primary" />
-          </div>
-          <span className="text-display text-lg">Mitigata</span>
-        </div>
+        <img src={mitigataLogo} alt="Mitigata" className="h-8 w-auto" />
       </div>
 
       <nav className="flex-1 px-3 py-4">
