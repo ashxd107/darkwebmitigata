@@ -11,12 +11,12 @@ const plans = [
   {
     id: "individual",
     title: "Individual",
-    price: "$9.99",
-    period: "/mo",
+    price: "₹1,499",
+    period: " / year",
     icon: User,
     features: [
       "Identity theft protection",
-      "Fraud reimbursement up to $50K",
+      "Fraud reimbursement up to ₹5,00,000",
       "Legal assistance",
       "Data breach support",
       "Account recovery",
@@ -25,8 +25,8 @@ const plans = [
   {
     id: "family",
     title: "Family",
-    price: "$19.99",
-    period: "/mo",
+    price: "₹3,499",
+    period: " / year",
     icon: Users,
     popular: true,
     features: [
