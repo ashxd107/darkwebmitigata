@@ -25,16 +25,23 @@ interface FamilyMember {
   phone: string;
 }
 
+type SumInsured = 50000 | 100000;
+
+const pricing: Record<string, Record<SumInsured, string>> = {
+  individual: { 50000: "₹1,499", 100000: "₹2,999" },
+  family: { 50000: "₹3,499", 100000: "₹5,999" },
+};
+
+const formatSumInsured = (v: SumInsured) => (v === 50000 ? "₹50,000" : "₹1,00,000");
+
 const plans = [
   {
     id: "individual",
     title: "Individual",
-    price: "₹1,499",
-    priceRaw: "₹1,499 / year",
     icon: User,
     features: [
       "Identity theft protection",
-      "Fraud reimbursement up to ₹5,00,000",
+      "Fraud reimbursement",
       "Legal assistance",
       "Data breach support",
       "Account recovery",
@@ -43,11 +50,9 @@ const plans = [
   {
     id: "family",
     title: "Family",
-    price: "₹3,499",
-    priceRaw: "₹3,499 / year",
     icon: Users,
     features: [
-      "Covers up to 5 members",
+      "Covers up to 3 members",
       "Child identity protection",
       "Shared fraud protection",
       "Device coverage",
@@ -73,12 +78,15 @@ const stepVariants = {
 const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
   const [step, setStep] = useState(1);
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const [sumInsured, setSumInsured] = useState<SumInsured>(50000);
   const [members, setMembers] = useState<FamilyMember[]>([createMember("Self")]);
   const [consent, setConsent] = useState(false);
   const [paymentFailed, setPaymentFailed] = useState(false);
 
   const totalSteps = 5;
   const selectedPlanData = plans.find((p) => p.id === selectedPlan);
+  const currentPrice = selectedPlan ? pricing[selectedPlan]?.[sumInsured] : "";
+  const currentPriceRaw = currentPrice ? `${currentPrice} / year` : "";
 
   const handlePlanSelect = (planId: string) => {
     setSelectedPlan(planId);
@@ -96,7 +104,7 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
   };
 
   const addMember = (relation: MemberRelation) => {
-    if (members.length >= 5) return;
+    if (members.length >= 3) return;
     setMembers((prev) => [...prev, createMember(relation)]);
   };
 
@@ -105,10 +113,9 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
   };
 
   const hasSpouse = members.some((m) => m.relation === "Spouse");
-  const childCount = members.filter((m) => m.relation === "Child").length;
+  const hasChild = members.some((m) => m.relation === "Child");
 
   const handlePayAttempt = () => {
-    // Simulate payment — in real app, integrate Stripe here
     setPaymentFailed(true);
   };
 
@@ -116,6 +123,7 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
     onClose();
     setStep(1);
     setSelectedPlan(null);
+    setSumInsured(50000);
     setMembers([createMember("Self")]);
     setConsent(false);
     setPaymentFailed(false);
@@ -194,15 +202,38 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
                       )}
                     </div>
                     <h3 className="text-display text-lg">{plan.title}</h3>
-                    <p className="text-display text-2xl mt-1">{plan.price}<span className="text-body text-sm font-normal"> / year</span></p>
+                    <p className="text-body text-xs mt-1">Starting from {pricing[plan.id][50000]} / year</p>
                   </motion.button>
                 ))}
               </motion.div>
             )}
 
-            {/* STEP 2: Coverage Details */}
+            {/* STEP 2: Coverage Details + Sum Insured */}
             {step === 2 && selectedPlanData && (
-              <motion.div key="step2" variants={stepVariants} initial="enter" animate="center" exit="exit">
+              <motion.div key="step2" variants={stepVariants} initial="enter" animate="center" exit="exit" className="space-y-6">
+                {/* Sum Insured Selector */}
+                <div>
+                  <p className="text-display text-sm mb-3">Choose Sum Insured</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    {([50000, 100000] as SumInsured[]).map((val) => (
+                      <button
+                        key={val}
+                        onClick={() => setSumInsured(val)}
+                        className={`rounded-xl border px-4 py-3 text-left transition-all duration-200 ${
+                          sumInsured === val
+                            ? "ring-2 ring-primary border-primary/30 bg-primary/5"
+                            : "border-border bg-card hover:border-primary/20"
+                        }`}
+                      >
+                        <span className="text-display text-lg">{formatSumInsured(val)}</span>
+                        <p className="text-body text-xs mt-0.5">
+                          Premium: {pricing[selectedPlanData.id][val]} / year
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="card-surface">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -210,7 +241,7 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
                     </div>
                     <div>
                       <h3 className="text-display text-sm">{selectedPlanData.title} Plan</h3>
-                      <p className="text-body text-xs">{selectedPlanData.priceRaw}</p>
+                      <p className="text-body text-xs">{currentPriceRaw}</p>
                     </div>
                   </div>
                   <ul className="space-y-3">
@@ -285,8 +316,8 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
                   </div>
                 ))}
 
-                {/* Add family members (only for family plan) */}
-                {selectedPlan === "family" && members.length < 5 && (
+                {/* Add family members (only for family plan, max 3) */}
+                {selectedPlan === "family" && members.length < 3 && (
                   <div className="flex gap-2">
                     {!hasSpouse && (
                       <Button
@@ -299,7 +330,7 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
                         Add Spouse
                       </Button>
                     )}
-                    {childCount < 3 && (
+                    {!hasChild && (
                       <Button
                         variant="outline"
                         size="sm"
@@ -322,7 +353,16 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
                     className="mt-0.5"
                   />
                   <Label htmlFor="consent" className="text-body text-xs leading-relaxed cursor-pointer">
-                    I confirm that the details provided are accurate and I agree to be contacted regarding policy issuance.
+                    I confirm that I have read and agree to the{" "}
+                    <a
+                      href="https://mitigata.com/terms"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary underline underline-offset-2 hover:text-primary/80"
+                    >
+                      policy terms and conditions
+                    </a>
+                    .
                   </Label>
                 </div>
               </motion.div>
@@ -337,8 +377,12 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
                     <span className="text-display text-sm">{selectedPlanData.title}</span>
                   </div>
                   <div className="flex items-center justify-between pb-4 border-b border-border/50">
+                    <span className="text-body text-sm">Sum Insured</span>
+                    <span className="text-display text-sm">{formatSumInsured(sumInsured)}</span>
+                  </div>
+                  <div className="flex items-center justify-between pb-4 border-b border-border/50">
                     <span className="text-body text-sm">Annual Premium</span>
-                    <span className="text-display text-sm">{selectedPlanData.priceRaw}</span>
+                    <span className="text-display text-sm">{currentPriceRaw}</span>
                   </div>
                   <div className="flex items-center justify-between pb-4 border-b border-border/50">
                     <span className="text-body text-sm">Members Covered</span>
@@ -358,6 +402,13 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
                     ))}
                   </div>
 
+                  <div className="flex items-center justify-between pb-4 border-b border-border/50">
+                    <span className="text-body text-sm">Consent</span>
+                    <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-xs">
+                      <Check className="h-3 w-3 mr-1" /> Accepted
+                    </Badge>
+                  </div>
+
                   <div className="flex items-center justify-between">
                     <span className="text-body text-sm">Coverage</span>
                     <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-xs">Active on payment</Badge>
@@ -373,8 +424,11 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
                   <CreditCard className="h-8 w-8 text-primary" strokeWidth={1.5} />
                 </div>
                 <h3 className="text-display text-xl mb-2">Complete your purchase</h3>
+                <p className="text-body text-sm mb-1">
+                  {selectedPlanData.title} Plan · Sum Insured: <span className="text-display">{formatSumInsured(sumInsured)}</span>
+                </p>
                 <p className="text-body text-sm mb-2">
-                  Total premium: <span className="text-display">{selectedPlanData.priceRaw}</span>
+                  Total premium: <span className="text-display">{currentPriceRaw}</span>
                 </p>
                 <p className="text-body text-[11px] mb-6">
                   {members.length} member{members.length > 1 ? "s" : ""} covered under {selectedPlanData.title} plan

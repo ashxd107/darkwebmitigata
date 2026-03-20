@@ -30,7 +30,7 @@ const plans = [
     icon: Users,
     popular: true,
     features: [
-      "Covers up to 5 members",
+      "Covers up to 3 members",
       "Child identity protection",
       "Shared fraud protection",
       "Device coverage",
