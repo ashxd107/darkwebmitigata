@@ -41,22 +41,22 @@ const plans = [
 
 const InsurancePage = ({ onGetStarted }: InsurancePageProps) => {
   return (
-    <div className="space-y-16">
+    <div className="space-y-10 lg:space-y-16">
       {/* Why section */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="card-surface bg-foreground text-card p-10 rounded-[24px]">
+        <div className="card-surface bg-foreground text-card p-6 sm:p-10 rounded-[20px] sm:rounded-[24px]">
           <div className="flex items-center gap-3 mb-4">
-            <ShieldCheck className="h-7 w-7 text-primary" strokeWidth={1.5} />
+            <ShieldCheck className="h-6 sm:h-7 w-6 sm:w-7 text-primary" strokeWidth={1.5} />
             <Badge variant="outline" className="bg-primary/20 text-primary border-primary/30 text-xs font-medium">
               Recommended
             </Badge>
           </div>
-          <h2 className="text-2xl font-semibold mb-3">Why you need cyber insurance</h2>
-          <p className="text-base opacity-70 leading-relaxed max-w-2xl">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-3">Why you need cyber insurance</h2>
+          <p className="text-sm sm:text-base opacity-70 leading-relaxed max-w-2xl">
             Your exposed data — including passwords, session tokens, and personal information — significantly
             increases your risk of fraud, identity theft, and financial loss. Cyber insurance provides a
             financial safety net when prevention isn't enough.
@@ -71,9 +71,9 @@ const InsurancePage = ({ onGetStarted }: InsurancePageProps) => {
         transition={{ duration: 0.5, delay: 0.1 }}
       >
         <p className="text-caps mb-2">Plans</p>
-        <h2 className="text-display text-2xl mb-8">Choose your coverage</h2>
+        <h2 className="text-display text-xl sm:text-2xl mb-6 sm:mb-8">Choose your coverage</h2>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
           {plans.map((plan) => (
             <motion.div
               key={plan.id}
@@ -98,7 +98,7 @@ const InsurancePage = ({ onGetStarted }: InsurancePageProps) => {
               </div>
 
               <div className="mb-6">
-                <span className="text-display text-3xl">{plan.price}</span>
+                <span className="text-display text-2xl sm:text-3xl">{plan.price}</span>
                 <span className="text-body text-sm">{plan.period}</span>
               </div>
 

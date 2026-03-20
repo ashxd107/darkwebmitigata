@@ -5,10 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 import {
   User, Users, ArrowRight, ArrowLeft, Check, ShieldCheck,
-  CreditCard, X, Plus, Trash2, AlertCircle,
+  CreditCard, X, Plus, Trash2, AlertCircle, CalendarIcon,
 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 interface InsuranceFlowProps {
   open: boolean;
@@ -23,6 +28,8 @@ interface FamilyMember {
   name: string;
   email: string;
   phone: string;
+  dob: Date | undefined;
+  address: string;
 }
 
 type SumInsured = 50000 | 100000;
@@ -67,6 +74,8 @@ const createMember = (relation: MemberRelation): FamilyMember => ({
   name: "",
   email: "",
   phone: "",
+  dob: undefined,
+  address: "",
 });
 
 const stepVariants = {
@@ -97,7 +106,7 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
     }
   };
 
-  const updateMember = (id: string, field: keyof FamilyMember, value: string) => {
+  const updateMember = (id: string, field: keyof FamilyMember, value: string | Date | undefined) => {
     setMembers((prev) =>
       prev.map((m) => (m.id === id ? { ...m, [field]: value } : m))
     );
@@ -136,21 +145,21 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/20 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-foreground/20 backdrop-blur-sm sm:p-4"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
         transition={{ duration: 0.4, ease: [0.2, 0.8, 0.2, 1] as const }}
-        className="bg-card rounded-[24px] w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+        className="bg-card rounded-t-[24px] sm:rounded-[24px] w-full sm:max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto"
         style={{ boxShadow: "0 24px 80px rgba(0,0,0,0.12)" }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 pb-0">
+        <div className="flex items-center justify-between p-4 sm:p-6 pb-0">
           <div>
             <p className="text-caps mb-1">Cyber Insurance</p>
-            <h2 className="text-display text-xl">
+            <h2 className="text-display text-lg sm:text-xl">
               {step === 1 && "Choose your plan"}
               {step === 2 && "Coverage details"}
               {step === 3 && (selectedPlan === "family" ? "Insured members" : "Your information")}
@@ -164,7 +173,7 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
         </div>
 
         {/* Stepper */}
-        <div className="flex gap-1.5 px-6 pt-4">
+        <div className="flex gap-1.5 px-4 sm:px-6 pt-4">
           {Array.from({ length: totalSteps }).map((_, i) => (
             <div
               key={i}
@@ -176,11 +185,11 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
         </div>
 
         {/* Content */}
-        <div className="p-6 min-h-[300px]">
+        <div className="p-4 sm:p-6 min-h-[300px]">
           <AnimatePresence mode="wait">
             {/* STEP 1: Plan Selection */}
             {step === 1 && (
-              <motion.div key="step1" variants={stepVariants} initial="enter" animate="center" exit="exit" className="grid md:grid-cols-2 gap-4">
+              <motion.div key="step1" variants={stepVariants} initial="enter" animate="center" exit="exit" className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {plans.map((plan) => (
                   <motion.button
                     key={plan.id}
@@ -211,7 +220,6 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
             {/* STEP 2: Coverage Details + Sum Insured */}
             {step === 2 && selectedPlanData && (
               <motion.div key="step2" variants={stepVariants} initial="enter" animate="center" exit="exit" className="space-y-6">
-                {/* Sum Insured Selector */}
                 <div>
                   <p className="text-display text-sm mb-3">Choose Sum Insured</p>
                   <div className="grid grid-cols-2 gap-3">
@@ -225,7 +233,7 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
                             : "border-border bg-card hover:border-primary/20"
                         }`}
                       >
-                        <span className="text-display text-lg">{formatSumInsured(val)}</span>
+                        <span className="text-display text-base sm:text-lg">{formatSumInsured(val)}</span>
                         <p className="text-body text-xs mt-0.5">
                           Premium: {pricing[selectedPlanData.id][val]} / year
                         </p>
@@ -283,14 +291,58 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
                         </Button>
                       )}
                     </div>
-                    <div className="grid md:grid-cols-3 gap-3">
+
+                    {/* Row 1: Name + DOB */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <Label className="text-body text-[11px] mb-1 block">Full Name</Label>
                         <Input
                           value={member.name}
                           onChange={(e) => updateMember(member.id, "name", e.target.value)}
                           placeholder="Full name"
-                          className="rounded-xl h-9 text-sm"
+                          className="rounded-xl h-10 text-sm"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-body text-[11px] mb-1 block">Date of Birth</Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className={cn(
+                                "w-full justify-start text-left font-normal rounded-xl h-10 text-sm",
+                                !member.dob && "text-muted-foreground"
+                              )}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {member.dob ? format(member.dob, "dd MMM yyyy") : <span>Select date</span>}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={member.dob}
+                              onSelect={(date) => updateMember(member.id, "dob", date)}
+                              disabled={(date) =>
+                                date > new Date() || date < new Date("1900-01-01")
+                              }
+                              initialFocus
+                              className={cn("p-3 pointer-events-auto")}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </div>
+
+                    {/* Row 2: Phone + Email */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <Label className="text-body text-[11px] mb-1 block">Phone Number</Label>
+                        <Input
+                          value={member.phone}
+                          onChange={(e) => updateMember(member.id, "phone", e.target.value)}
+                          placeholder="+91 98765 43210"
+                          className="rounded-xl h-10 text-sm"
                         />
                       </div>
                       <div>
@@ -300,25 +352,28 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
                           value={member.email}
                           onChange={(e) => updateMember(member.id, "email", e.target.value)}
                           placeholder="email@example.com"
-                          className="rounded-xl h-9 text-sm"
+                          className="rounded-xl h-10 text-sm"
                         />
                       </div>
-                      <div>
-                        <Label className="text-body text-[11px] mb-1 block">Phone</Label>
-                        <Input
-                          value={member.phone}
-                          onChange={(e) => updateMember(member.id, "phone", e.target.value)}
-                          placeholder="+91 98765 43210"
-                          className="rounded-xl h-9 text-sm"
-                        />
-                      </div>
+                    </div>
+
+                    {/* Row 3: Address */}
+                    <div>
+                      <Label className="text-body text-[11px] mb-1 block">Address</Label>
+                      <Textarea
+                        value={member.address}
+                        onChange={(e) => updateMember(member.id, "address", e.target.value)}
+                        placeholder="Full address"
+                        className="rounded-xl text-sm min-h-[60px] resize-none"
+                        rows={2}
+                      />
                     </div>
                   </div>
                 ))}
 
                 {/* Add family members (only for family plan, max 3) */}
                 {selectedPlan === "family" && members.length < 3 && (
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {!hasSpouse && (
                       <Button
                         variant="outline"
@@ -390,12 +445,17 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
                   </div>
 
                   {/* Member list */}
-                  <div className="space-y-2 pb-4 border-b border-border/50">
-                    <span className="text-body text-sm">Insured Members</span>
+                  <div className="space-y-3 pb-4 border-b border-border/50">
+                    <span className="text-body text-sm block">Insured Members</span>
                     {members.map((m) => (
-                      <div key={m.id} className="flex items-center justify-between pl-3">
-                        <span className="text-display text-xs">{m.name || "—"}</span>
-                        <Badge variant="outline" className="text-[9px] font-medium bg-secondary/50">
+                      <div key={m.id} className="flex items-center justify-between pl-3 gap-2">
+                        <div className="min-w-0">
+                          <span className="text-display text-xs block">{m.name || "—"}</span>
+                          {m.dob && (
+                            <span className="text-body text-[10px]">DOB: {format(m.dob, "dd MMM yyyy")}</span>
+                          )}
+                        </div>
+                        <Badge variant="outline" className="text-[9px] font-medium bg-secondary/50 shrink-0">
                           {m.relation}
                         </Badge>
                       </div>
@@ -419,11 +479,11 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
 
             {/* STEP 5: Payment */}
             {step === 5 && selectedPlanData && (
-              <motion.div key="step5" variants={stepVariants} initial="enter" animate="center" exit="exit" className="text-center py-8">
+              <motion.div key="step5" variants={stepVariants} initial="enter" animate="center" exit="exit" className="text-center py-4 sm:py-8">
                 <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
                   <CreditCard className="h-8 w-8 text-primary" strokeWidth={1.5} />
                 </div>
-                <h3 className="text-display text-xl mb-2">Complete your purchase</h3>
+                <h3 className="text-display text-lg sm:text-xl mb-2">Complete your purchase</h3>
                 <p className="text-body text-sm mb-1">
                   {selectedPlanData.title} Plan · Sum Insured: <span className="text-display">{formatSumInsured(sumInsured)}</span>
                 </p>
@@ -435,14 +495,14 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
                 </p>
 
                 {paymentFailed && (
-                  <div className="flex items-center gap-2 justify-center bg-destructive/10 text-destructive rounded-xl px-4 py-3 mb-6 text-sm max-w-sm mx-auto">
-                    <AlertCircle className="h-4 w-4 shrink-0" />
+                  <div className="flex items-start gap-2 justify-center bg-destructive/10 text-destructive rounded-xl px-4 py-3 mb-6 text-sm max-w-sm mx-auto text-left">
+                    <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
                     <span>Payment failed. Please try again or contact <strong>contact@mitigata.com</strong> for support.</span>
                   </div>
                 )}
 
                 <Button
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-8 py-3 h-auto font-semibold text-base w-fit mx-auto"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-6 sm:px-8 py-3 h-auto font-semibold text-base w-full sm:w-fit mx-auto"
                   onClick={handlePayAttempt}
                 >
                   <ShieldCheck className="mr-2 h-5 w-5" />
@@ -458,7 +518,7 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between p-6 pt-0">
+        <div className="flex items-center justify-between p-4 sm:p-6 pt-0">
           <Button
             variant="ghost"
             onClick={() => { setStep(Math.max(1, step - 1)); setPaymentFailed(false); }}
