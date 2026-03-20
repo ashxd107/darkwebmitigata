@@ -1,5 +1,6 @@
 import { useState } from "react";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
+import MobileHeader from "@/components/dashboard/MobileHeader";
 import OverviewDashboard from "@/components/dashboard/OverviewDashboard";
 import ExposureSection from "@/components/dashboard/ExposureSection";
 import LeakSources from "@/components/dashboard/LeakSources";
@@ -12,6 +13,7 @@ import InsuranceFlow from "@/components/dashboard/InsuranceFlow";
 const Index = () => {
   const [activeItem, setActiveItem] = useState("overview");
   const [insuranceOpen, setInsuranceOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const renderContent = () => {
     switch (activeItem) {
@@ -24,26 +26,26 @@ const Index = () => {
         );
       case "exposure":
         return (
-          <div className="py-8">
+          <div className="py-4 lg:py-8">
             <ExposureSection />
           </div>
         );
       case "leak-sources":
         return (
-          <div className="py-8 space-y-14">
+          <div className="py-4 lg:py-8 space-y-8 lg:space-y-14">
             <LeakSources />
             <AffectedWebsites />
           </div>
         );
       case "recommendations":
         return (
-          <div className="py-8">
+          <div className="py-4 lg:py-8">
             <Recommendations />
           </div>
         );
       case "insurance":
         return (
-          <div className="py-8">
+          <div className="py-4 lg:py-8">
             <InsurancePage onGetStarted={() => setInsuranceOpen(true)} />
           </div>
         );
@@ -54,13 +56,16 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <MobileHeader onMenuClick={() => setMobileMenuOpen(true)} />
       <DashboardSidebar
         activeItem={activeItem}
         onNavigate={setActiveItem}
         onInsuranceClick={() => setActiveItem("insurance")}
+        mobileOpen={mobileMenuOpen}
+        onMobileClose={() => setMobileMenuOpen(false)}
       />
 
-      <main className="ml-[260px] px-8 lg:px-12 py-4 pb-24 max-w-[1200px]">
+      <main className="pt-16 lg:pt-0 lg:ml-[260px] px-4 sm:px-6 lg:px-8 xl:px-12 py-4 pb-24 max-w-[1200px]">
         {renderContent()}
       </main>
 

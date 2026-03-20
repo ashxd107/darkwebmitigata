@@ -1,18 +1,8 @@
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import {
-  ArrowRight,
-  AlertTriangle,
-  Key,
-  Database,
-  ShieldX,
-  User,
-  Globe,
-  Monitor,
-  Lock,
-  ShieldCheck,
-  CreditCard,
-  ShieldAlert,
+  ArrowRight, AlertTriangle, Key, Database, ShieldX,
+  User, Globe, Monitor, Lock, ShieldCheck, CreditCard, ShieldAlert,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import RiskScoreMeter from "./RiskScoreMeter";
@@ -77,13 +67,13 @@ const riskBadge: Record<string, string> = {
 
 const OverviewDashboard = ({ onInsuranceClick, onNavigate }: OverviewDashboardProps) => {
   return (
-    <motion.div variants={stagger} initial="hidden" animate="visible" className="py-6 space-y-5">
+    <motion.div variants={stagger} initial="hidden" animate="visible" className="py-4 lg:py-6 space-y-5">
       {/* ROW 1: Identity + Score Meter + CTA */}
-      <motion.div variants={fadeIn} className="grid grid-cols-12 gap-5">
+      <motion.div variants={fadeIn} className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* LEFT: User Identity */}
-        <div className="col-span-12 lg:col-span-3 flex flex-col justify-center">
+        <div className="lg:col-span-3 flex flex-col justify-center">
           <p className="text-caps mb-2">Personal Exposure Report</p>
-          <h2 className="text-display text-xl leading-tight">Rahul Sharma</h2>
+          <h2 className="text-display text-lg lg:text-xl leading-tight">Rahul Sharma</h2>
           <p className="text-body text-sm mt-1">+91 98XXXXXX10</p>
           <p className="text-body text-[11px] mt-3 opacity-50">
             Your data has been found across multiple breach sources
@@ -91,7 +81,7 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate }: OverviewDashboardPr
         </div>
 
         {/* CENTER: Risk Score Meter */}
-        <div className="col-span-12 lg:col-span-5 flex flex-col items-center justify-center">
+        <div className="lg:col-span-5 flex flex-col items-center justify-center py-4 lg:py-0">
           <RiskScoreMeter score={82} />
           <p className="text-body text-xs mt-2 text-center">
             Immediate action is recommended
@@ -99,7 +89,7 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate }: OverviewDashboardPr
         </div>
 
         {/* RIGHT: CTA Card */}
-        <div className="col-span-12 lg:col-span-4">
+        <div className="lg:col-span-4">
           <div className="bg-foreground text-card p-6 rounded-[20px] h-full flex flex-col justify-center">
             <ShieldAlert className="h-6 w-6 mb-3 text-primary" strokeWidth={1.5} />
             <h3 className="text-sm font-semibold mb-1">Reduce your risk</h3>
@@ -119,30 +109,30 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate }: OverviewDashboardPr
       </motion.div>
 
       {/* ROW 2: Metric Cards */}
-      <motion.div variants={fadeIn} className="grid grid-cols-4 gap-4">
+      <motion.div variants={fadeIn} className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
         {metrics.map((m) => (
           <div key={m.label} className="card-surface !p-4 flex flex-col">
             <div className="flex items-center justify-between mb-3">
               <m.icon className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
               <div className={`h-2 w-2 rounded-full ${riskColors[m.risk]}`} />
             </div>
-            <span className="text-display text-2xl">{m.value}</span>
+            <span className="text-display text-xl lg:text-2xl">{m.value}</span>
             <span className="text-body text-[11px] mt-0.5">{m.label}</span>
           </div>
         ))}
       </motion.div>
 
       {/* ROW 3: Exposure Breakdown + Severity + Top Risks */}
-      <div className="grid grid-cols-12 gap-5">
-        <motion.div variants={fadeIn} className="col-span-12 lg:col-span-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 lg:gap-5">
+        <motion.div variants={fadeIn} className="md:col-span-1 lg:col-span-4">
           <ExposureBreakdownChart />
         </motion.div>
 
-        <motion.div variants={fadeIn} className="col-span-12 lg:col-span-4">
+        <motion.div variants={fadeIn} className="md:col-span-1 lg:col-span-4">
           <SeverityDistribution />
         </motion.div>
 
-        <motion.div variants={fadeIn} className="col-span-12 lg:col-span-4">
+        <motion.div variants={fadeIn} className="md:col-span-2 lg:col-span-4">
           <div className="card-surface !p-5 h-full">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-display text-sm">Top Risk Sources</h3>
@@ -171,8 +161,8 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate }: OverviewDashboardPr
       </div>
 
       {/* ROW 4: Domains + Recommendations */}
-      <div className="grid grid-cols-12 gap-5">
-        <motion.div variants={fadeIn} className="col-span-12 lg:col-span-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5">
+        <motion.div variants={fadeIn} className="lg:col-span-8">
           <div className="card-surface !p-5">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-display text-sm">Affected Domains</h3>
@@ -199,7 +189,7 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate }: OverviewDashboardPr
           </div>
         </motion.div>
 
-        <motion.div variants={fadeIn} className="col-span-12 lg:col-span-4">
+        <motion.div variants={fadeIn} className="lg:col-span-4">
           <div className="card-surface !p-5 h-full">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-display text-sm">Recommendations</h3>

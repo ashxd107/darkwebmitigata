@@ -29,7 +29,7 @@ interface LeakDetailDrawerProps {
 const DetailRow = ({ label, value }: { label: string; value: string }) => (
   <div className="flex items-start justify-between py-3 border-b border-border/50 last:border-0">
     <span className="text-body text-sm">{label}</span>
-    <span className="text-display text-sm text-right max-w-[200px]">{value}</span>
+    <span className="text-display text-sm text-right max-w-[180px] sm:max-w-[200px]">{value}</span>
   </div>
 );
 
@@ -38,7 +38,7 @@ const LeakDetailDrawer = ({ leak, open, onClose }: LeakDetailDrawerProps) => {
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent className="sm:max-w-md bg-card border-border/30 overflow-y-auto">
+      <SheetContent className="w-full sm:max-w-md bg-card border-border/30 overflow-y-auto">
         <SheetHeader className="pb-6">
           <div className="flex items-center gap-3 mb-2">
             <div className="h-10 w-10 rounded-xl bg-destructive/10 flex items-center justify-center">
@@ -65,7 +65,7 @@ const LeakDetailDrawer = ({ leak, open, onClose }: LeakDetailDrawerProps) => {
 
         <div className="mt-6">
           <p className="text-caps mb-3">Detected</p>
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
             <span className="text-body text-sm">{leak.domain}</span>
             <span className="text-body text-sm">{leak.date}</span>
           </div>
