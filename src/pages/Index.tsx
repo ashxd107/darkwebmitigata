@@ -7,6 +7,7 @@ import LeakSources from "@/components/dashboard/LeakSources";
 import AffectedWebsites from "@/components/dashboard/AffectedWebsites";
 import Recommendations from "@/components/dashboard/Recommendations";
 import InsurancePage from "@/components/dashboard/InsurancePage";
+import CallAssistance from "@/components/dashboard/CallAssistance";
 import StickyCTA from "@/components/dashboard/StickyCTA";
 import InsuranceFlow from "@/components/dashboard/InsuranceFlow";
 
@@ -43,6 +44,8 @@ const Index = () => {
             <Recommendations />
           </div>
         );
+      case "call-assistance":
+        return <CallAssistance />;
       case "insurance":
         return (
           <div className="py-4 lg:py-8">

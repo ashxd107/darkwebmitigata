@@ -46,25 +46,36 @@ const plans = [
     id: "individual",
     title: "Individual",
     icon: User,
-    features: [
-      "Identity theft protection",
-      "Fraud reimbursement",
-      "Legal assistance",
-      "Data breach support",
-      "Account recovery",
-    ],
+    features: [],
   },
   {
     id: "family",
     title: "Family",
     icon: Users,
-    features: [
-      "Covers up to 3 members",
-      "Child identity protection",
-      "Shared fraud protection",
-      "Device coverage",
-      "Priority support",
-    ],
+    features: [],
+  },
+];
+
+const coverageItems = [
+  {
+    title: "Card Fraud Protection",
+    description: "Protection against unauthorized or fraudulent use of your debit or credit card.",
+    insurer: "Protection / Card Security Cover",
+  },
+  {
+    title: "Online Payment Protection",
+    description: "Protection against digital theft of funds during UPI, net banking, and other online payment transactions.",
+    insurer: "Digital Transaction Protection / UPI & Netbanking Protection",
+  },
+  {
+    title: "Wallet Fraud Protection",
+    description: "Protection against misuse or fraudulent loss involving digital wallets.",
+    insurer: "Digital Wallet Security / Wallet Loss Protection",
+  },
+  {
+    title: "Third-Party App Transactions Covered",
+    description: "Protection for eligible fraudulent transactions through third-party or NPCI-linked apps.",
+    insurer: "Protection on Partner Apps / NPCI App Protection",
   },
 ];
 
@@ -243,7 +254,7 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
                 </div>
 
                 <div className="card-surface">
-                  <div className="flex items-center gap-3 mb-6">
+                  <div className="flex items-center gap-3 mb-5">
                     <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
                       <selectedPlanData.icon className="h-5 w-5 text-primary" strokeWidth={1.5} />
                     </div>
@@ -252,13 +263,20 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
                       <p className="text-body text-xs">{currentPriceRaw}</p>
                     </div>
                   </div>
-                  <ul className="space-y-3">
-                    {selectedPlanData.features.map((f) => (
-                      <li key={f} className="flex items-center gap-3">
-                        <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                          <Check className="h-3 w-3 text-primary" strokeWidth={2} />
+                  <p className="text-caps mb-3">Coverage Included</p>
+                  <ul className="space-y-4">
+                    {coverageItems.map((item) => (
+                      <li key={item.title} className="space-y-0.5">
+                        <div className="flex items-start gap-3">
+                          <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                            <Check className="h-3 w-3 text-primary" strokeWidth={2} />
+                          </div>
+                          <div>
+                            <span className="text-display text-sm block">{item.title}</span>
+                            <span className="text-body text-xs leading-relaxed block mt-0.5">{item.description}</span>
+                            <span className="text-muted-foreground text-[10px] italic block mt-0.5">{item.insurer}</span>
+                          </div>
                         </div>
-                        <span className="text-body text-sm">{f}</span>
                       </li>
                     ))}
                   </ul>

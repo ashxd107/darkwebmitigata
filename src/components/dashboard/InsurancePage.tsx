@@ -7,6 +7,25 @@ interface InsurancePageProps {
   onGetStarted: () => void;
 }
 
+const coverageItems = [
+  {
+    title: "Card Fraud Protection",
+    description: "Protection against unauthorized or fraudulent card use",
+  },
+  {
+    title: "Online Payment Protection",
+    description: "Protection against digital theft of funds during UPI, net banking, and online transactions",
+  },
+  {
+    title: "Wallet Fraud Protection",
+    description: "Protection against misuse or fraudulent loss involving digital wallets",
+  },
+  {
+    title: "Third-Party App Transactions",
+    description: "Protection for eligible fraudulent transactions through third-party or NPCI-linked apps",
+  },
+];
+
 const plans = [
   {
     id: "individual",
@@ -14,13 +33,7 @@ const plans = [
     price: "₹1,499",
     period: " / year",
     icon: User,
-    features: [
-      "Identity theft protection",
-      "Fraud reimbursement up to ₹5,00,000",
-      "Legal assistance",
-      "Data breach support",
-      "Account recovery",
-    ],
+    features: coverageItems.map(c => c.title),
   },
   {
     id: "family",
@@ -29,13 +42,7 @@ const plans = [
     period: " / year",
     icon: Users,
     popular: true,
-    features: [
-      "Covers up to 3 members",
-      "Child identity protection",
-      "Shared fraud protection",
-      "Device coverage",
-      "Priority support",
-    ],
+    features: ["Covers up to 3 members", ...coverageItems.map(c => c.title)],
   },
 ];
 
