@@ -9,7 +9,7 @@ import mitigataLogo from "@/assets/mitigata-logo.png";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 12 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.2, 0.8, 0.2, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.2, 0.8, 0.2, 1] as const } },
   exit: { opacity: 0, y: -8, transition: { duration: 0.25 } },
 };
 
