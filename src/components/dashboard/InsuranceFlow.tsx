@@ -46,25 +46,36 @@ const plans = [
     id: "individual",
     title: "Individual",
     icon: User,
-    features: [
-      "Identity theft protection",
-      "Fraud reimbursement",
-      "Legal assistance",
-      "Data breach support",
-      "Account recovery",
-    ],
+    features: [],
   },
   {
     id: "family",
     title: "Family",
     icon: Users,
-    features: [
-      "Covers up to 3 members",
-      "Child identity protection",
-      "Shared fraud protection",
-      "Device coverage",
-      "Priority support",
-    ],
+    features: [],
+  },
+];
+
+const coverageItems = [
+  {
+    title: "Card Fraud Protection",
+    description: "Protection against unauthorized or fraudulent use of your debit or credit card.",
+    insurer: "Protection / Card Security Cover",
+  },
+  {
+    title: "Online Payment Protection",
+    description: "Protection against digital theft of funds during UPI, net banking, and other online payment transactions.",
+    insurer: "Digital Transaction Protection / UPI & Netbanking Protection",
+  },
+  {
+    title: "Wallet Fraud Protection",
+    description: "Protection against misuse or fraudulent loss involving digital wallets.",
+    insurer: "Digital Wallet Security / Wallet Loss Protection",
+  },
+  {
+    title: "Third-Party App Transactions Covered",
+    description: "Protection for eligible fraudulent transactions through third-party or NPCI-linked apps.",
+    insurer: "Protection on Partner Apps / NPCI App Protection",
   },
 ];
 
