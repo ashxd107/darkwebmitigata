@@ -3,11 +3,13 @@ import { Badge } from "@/components/ui/badge";
 import {
   ArrowRight, AlertTriangle, Key, Database, ShieldX,
   User, Globe, Monitor, Lock, ShieldCheck, CreditCard, ShieldAlert,
+  CheckCircle2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import RiskScoreMeter from "./RiskScoreMeter";
 import ExposureBreakdownChart from "./ExposureBreakdownChart";
 import SeverityDistribution from "./SeverityDistribution";
+import { getRiskContent, emptyStates, type RiskBand } from "@/lib/riskContent";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 10 },
@@ -24,11 +26,20 @@ interface OverviewDashboardProps {
   onNavigate: (id: string) => void;
 }
 
+// Simulated data — in production this comes from API/state
+const RISK_SCORE = 82;
+const EXPOSURE_COUNT = 24;
+const PASSWORD_COUNT = 8;
+const LEAK_SOURCE_COUNT = 5;
+
+const riskContent = getRiskContent(RISK_SCORE);
+const hasExposures = EXPOSURE_COUNT > 0;
+
 const metrics = [
-  { label: "Total Exposures", value: "24", icon: AlertTriangle, risk: "high" as const },
-  { label: "Passwords Exposed", value: "8", icon: Key, risk: "high" as const },
-  { label: "Leak Sources", value: "5", icon: Database, risk: "mid" as const },
-  { label: "Risk Level", value: "Critical", icon: ShieldX, risk: "high" as const },
+  { label: "Total Exposures", value: String(EXPOSURE_COUNT), icon: AlertTriangle, risk: EXPOSURE_COUNT > 10 ? "high" as const : EXPOSURE_COUNT > 0 ? "mid" as const : "low" as const },
+  { label: "Passwords Exposed", value: String(PASSWORD_COUNT), icon: Key, risk: PASSWORD_COUNT > 5 ? "high" as const : PASSWORD_COUNT > 0 ? "mid" as const : "low" as const },
+  { label: "Leak Sources", value: String(LEAK_SOURCE_COUNT), icon: Database, risk: LEAK_SOURCE_COUNT > 3 ? "mid" as const : "low" as const },
+  { label: "Risk Level", value: riskContent.badgeLabel.replace(" Risk", ""), icon: ShieldX, risk: riskContent.band === "critical" ? "high" as const : riskContent.band === "medium" ? "mid" as const : "low" as const },
 ];
 
 const riskColors = { high: "bg-risk-high", mid: "bg-risk-mid", low: "bg-risk-low" };
@@ -65,6 +76,15 @@ const riskBadge: Record<string, string> = {
   Medium: "bg-primary/10 text-primary border-primary/20",
 };
 
+const EmptyState = ({ message, icon: Icon }: { message: string; icon: React.ElementType }) => (
+  <div className="flex flex-col items-center justify-center py-8 text-center">
+    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+      <Icon className="h-5 w-5 text-primary" strokeWidth={1.5} />
+    </div>
+    <p className="text-body text-sm max-w-xs">{message}</p>
+  </div>
+);
+
 const OverviewDashboard = ({ onInsuranceClick, onNavigate }: OverviewDashboardProps) => {
   return (
     <motion.div variants={stagger} initial="hidden" animate="visible" className="py-4 lg:py-6 space-y-5">
@@ -76,15 +96,15 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate }: OverviewDashboardPr
           <h2 className="text-display text-lg lg:text-xl leading-tight">Rahul Sharma</h2>
           <p className="text-body text-sm mt-1">+91 98XXXXXX10</p>
           <p className="text-body text-[11px] mt-3 opacity-50">
-            Your data has been found across multiple breach sources
+            {riskContent.supportingLine}
           </p>
         </div>
 
         {/* CENTER: Risk Score Meter */}
         <div className="lg:col-span-5 flex flex-col items-center justify-center py-4 lg:py-0">
-          <RiskScoreMeter score={82} />
+          <RiskScoreMeter score={RISK_SCORE} />
           <p className="text-body text-xs mt-2 text-center">
-            Immediate action is recommended
+            {riskContent.secondarySupportingLine}
           </p>
         </div>
 
@@ -92,20 +112,31 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate }: OverviewDashboardPr
         <div className="lg:col-span-4">
           <div className="bg-foreground text-card p-6 rounded-[20px] h-full flex flex-col justify-center">
             <ShieldAlert className="h-6 w-6 mb-3 text-primary" strokeWidth={1.5} />
-            <h3 className="text-sm font-semibold mb-1">Reduce your risk</h3>
+            <h3 className="text-sm font-semibold mb-1">{riskContent.ctaCardTitle}</h3>
             <p className="text-xs opacity-60 mb-4 leading-relaxed">
-              Your exposed data can be used for fraud or identity misuse.
+              {riskContent.ctaCardBody}
             </p>
             <Button
               onClick={onInsuranceClick}
               size="sm"
               className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg px-4 w-fit font-semibold text-xs"
             >
-              Get Cyber Insurance
+              {riskContent.ctaLabel}
               <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
             </Button>
           </div>
         </div>
+      </motion.div>
+
+      {/* Dynamic Banner */}
+      <motion.div variants={fadeIn} className="card-surface !p-5">
+        <div className="flex items-center gap-3">
+          <Badge variant="outline" className={`text-[10px] font-medium ${riskContent.badgeClass}`}>
+            {riskContent.badgeLabel}
+          </Badge>
+          <h2 className="text-display text-base lg:text-lg">{riskContent.headline}</h2>
+        </div>
+        <p className="text-body text-sm mt-1.5">{riskContent.body}</p>
       </motion.div>
 
       {/* ROW 2: Metric Cards */}
@@ -143,19 +174,23 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate }: OverviewDashboardPr
                 View all →
               </button>
             </div>
-            <div className="space-y-3">
-              {topLeaks.map((leak) => (
-                <div key={leak.source} className="flex items-center justify-between gap-2">
-                  <div className="min-w-0">
-                    <p className="text-display text-xs">{leak.source}</p>
-                    <p className="text-body text-[11px] truncate">{leak.impact}</p>
+            {hasExposures ? (
+              <div className="space-y-3">
+                {topLeaks.map((leak) => (
+                  <div key={leak.source} className="flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="text-display text-xs">{leak.source}</p>
+                      <p className="text-body text-[11px] truncate">{leak.impact}</p>
+                    </div>
+                    <Badge variant="outline" className={`text-[9px] font-medium shrink-0 ${riskBadge[leak.risk]}`}>
+                      {leak.risk}
+                    </Badge>
                   </div>
-                  <Badge variant="outline" className={`text-[9px] font-medium shrink-0 ${riskBadge[leak.risk]}`}>
-                    {leak.risk}
-                  </Badge>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <EmptyState message={emptyStates.leakSources} icon={CheckCircle2} />
+            )}
           </div>
         </motion.div>
       </div>
@@ -173,19 +208,23 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate }: OverviewDashboardPr
                 View all →
               </button>
             </div>
-            <div className="divide-y divide-border/40">
-              {domains.map((d) => (
-                <div key={d.name} className="flex items-center justify-between py-2 first:pt-0 last:pb-0">
-                  <div className="min-w-0">
-                    <span className="text-display text-xs block">{d.name}</span>
-                    <span className="text-body text-[11px]">{d.type}</span>
+            {hasExposures ? (
+              <div className="divide-y divide-border/40">
+                {domains.map((d) => (
+                  <div key={d.name} className="flex items-center justify-between py-2 first:pt-0 last:pb-0">
+                    <div className="min-w-0">
+                      <span className="text-display text-xs block">{d.name}</span>
+                      <span className="text-body text-[11px]">{d.type}</span>
+                    </div>
+                    <Badge variant="outline" className={`text-[9px] font-medium shrink-0 ${riskBadge[d.risk]}`}>
+                      {d.risk}
+                    </Badge>
                   </div>
-                  <Badge variant="outline" className={`text-[9px] font-medium shrink-0 ${riskBadge[d.risk]}`}>
-                    {d.risk}
-                  </Badge>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <EmptyState message={emptyStates.affectedDomains} icon={CheckCircle2} />
+            )}
           </div>
         </motion.div>
 
@@ -200,16 +239,20 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate }: OverviewDashboardPr
                 View all →
               </button>
             </div>
-            <div className="space-y-3">
-              {recommendations.map((rec) => (
-                <div key={rec.label} className="flex items-center gap-2.5">
-                  <div className="h-7 w-7 rounded-lg bg-secondary flex items-center justify-center shrink-0">
-                    <rec.icon className="h-3.5 w-3.5 text-foreground" strokeWidth={1.5} />
+            {hasExposures ? (
+              <div className="space-y-3">
+                {recommendations.map((rec) => (
+                  <div key={rec.label} className="flex items-center gap-2.5">
+                    <div className="h-7 w-7 rounded-lg bg-secondary flex items-center justify-center shrink-0">
+                      <rec.icon className="h-3.5 w-3.5 text-foreground" strokeWidth={1.5} />
+                    </div>
+                    <span className="text-body text-xs leading-snug">{rec.label}</span>
                   </div>
-                  <span className="text-body text-xs leading-snug">{rec.label}</span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <EmptyState message={emptyStates.recommendations} icon={CheckCircle2} />
+            )}
           </div>
         </motion.div>
       </div>

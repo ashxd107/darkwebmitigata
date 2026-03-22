@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { ShieldAlert, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { getRiskContent } from "@/lib/riskContent";
 
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -18,9 +19,12 @@ const itemVariants = {
 
 interface HeroSectionProps {
   onInsuranceClick: () => void;
+  riskScore?: number;
 }
 
-const HeroSection = ({ onInsuranceClick }: HeroSectionProps) => {
+const HeroSection = ({ onInsuranceClick, riskScore = 82 }: HeroSectionProps) => {
+  const content = getRiskContent(riskScore);
+
   return (
     <motion.section
       variants={containerVariants}
@@ -30,35 +34,34 @@ const HeroSection = ({ onInsuranceClick }: HeroSectionProps) => {
     >
       <motion.div variants={itemVariants} className="col-span-12 lg:col-span-8 flex flex-col justify-center">
         <div className="flex items-center gap-3 mb-5">
-          <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20 text-xs font-semibold px-3 py-1">
-            Critical Risk
+          <Badge variant="outline" className={`text-xs font-semibold px-3 py-1 ${content.badgeClass}`}>
+            {content.badgeLabel}
           </Badge>
-          <span className="text-body text-xs">Immediate action recommended</span>
+          <span className="text-body text-xs">{content.secondarySupportingLine}</span>
         </div>
         <h1 className="text-display text-4xl lg:text-5xl leading-tight" style={{ textWrap: "balance" as any }}>
-          Your data is exposed.
+          {content.headline}
         </h1>
         <p className="text-body text-lg mt-4 max-w-2xl leading-relaxed">
-          We found your personal information across multiple breach sources.
-          Some of this data can be used for fraud or identity misuse.
+          {content.body}
         </p>
         <p className="text-body text-xs mt-6 opacity-60">
-          Updated recently based on latest breach intelligence
+          {content.supportingLine}
         </p>
       </motion.div>
 
       <motion.div variants={itemVariants} className="col-span-12 lg:col-span-4">
         <div className="bg-foreground text-card p-8 rounded-[24px]">
           <ShieldAlert className="h-8 w-8 mb-4 text-primary" strokeWidth={1.5} />
-          <h3 className="text-lg font-semibold mb-2">Protect yourself</h3>
+          <h3 className="text-lg font-semibold mb-2">{content.ctaCardTitle}</h3>
           <p className="text-sm opacity-70 mb-6 leading-relaxed">
-            Get financial protection against fraud and identity theft with our cyber insurance.
+            {content.ctaCardBody}
           </p>
           <Button
             onClick={onInsuranceClick}
             className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-6 w-fit font-semibold"
           >
-            Get Cyber Insurance
+            {content.ctaLabel}
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
