@@ -30,36 +30,37 @@ const scanStages = [
 ];
 
 const Stepper = ({ current }: { current: number }) => (
-  <div className="flex items-center gap-2 sm:gap-3 mb-8 sm:mb-10">
+  <div className="flex items-center gap-1 sm:gap-2 mb-8 sm:mb-10 bg-secondary/50 rounded-2xl p-2 sm:p-2.5">
     {STEPS.map((label, i) => (
-      <div key={label} className="flex items-center gap-2 sm:gap-3">
-        <div className="flex items-center gap-1.5 sm:gap-2">
+      <div key={label} className="flex items-center gap-1 sm:gap-2 flex-1">
+        <div
+          className={`flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl transition-all duration-300 flex-1 justify-center ${
+            i === current
+              ? "bg-card shadow-sm border border-border/50"
+              : i < current
+              ? "bg-primary/10"
+              : ""
+          }`}
+        >
           <div
-            className={`h-7 w-7 sm:h-8 sm:w-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-300 ${
+            className={`h-6 w-6 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 ${
               i < current
                 ? "bg-primary text-primary-foreground"
                 : i === current
-                ? "bg-primary text-primary-foreground shadow-md"
-                : "bg-secondary text-muted-foreground"
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground"
             }`}
           >
-            {i < current ? <CheckCircle2 className="h-4 w-4" /> : i + 1}
+            {i < current ? <CheckCircle2 className="h-3.5 w-3.5" /> : i + 1}
           </div>
           <span
-            className={`text-xs sm:text-sm font-medium hidden sm:inline ${
+            className={`text-xs font-semibold hidden sm:inline ${
               i <= current ? "text-foreground" : "text-muted-foreground"
             }`}
           >
             {label}
           </span>
         </div>
-        {i < STEPS.length - 1 && (
-          <div
-            className={`h-px w-6 sm:w-10 lg:w-14 transition-colors duration-300 ${
-              i < current ? "bg-primary" : "bg-border"
-            }`}
-          />
-        )}
       </div>
     ))}
   </div>
