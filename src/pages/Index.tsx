@@ -24,6 +24,7 @@ const Index = () => {
           <OverviewDashboard
             onInsuranceClick={() => setInsuranceOpen(true)}
             onNavigate={setActiveItem}
+            riskScore={riskScore}
           />
         );
       case "exposure":
