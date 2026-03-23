@@ -27,17 +27,9 @@ interface OverviewDashboardProps {
   riskScore?: number;
 }
 
-// Simulated data — in production this comes from API/state
 const EXPOSURE_COUNT = 24;
 const PASSWORD_COUNT = 8;
 const LEAK_SOURCE_COUNT = 5;
-
-const getMetrics = (riskContent: ReturnType<typeof getRiskContent>) => [
-  { label: "Total Exposures", value: String(EXPOSURE_COUNT), icon: AlertTriangle, risk: EXPOSURE_COUNT > 10 ? "high" as const : EXPOSURE_COUNT > 0 ? "mid" as const : "low" as const },
-  { label: "Passwords Exposed", value: String(PASSWORD_COUNT), icon: Key, risk: PASSWORD_COUNT > 5 ? "high" as const : PASSWORD_COUNT > 0 ? "mid" as const : "low" as const },
-  { label: "Leak Sources", value: String(LEAK_SOURCE_COUNT), icon: Database, risk: LEAK_SOURCE_COUNT > 3 ? "mid" as const : "low" as const },
-  { label: "Risk Level", value: riskContent.band === "none" ? "Safe" : riskContent.band.charAt(0).toUpperCase() + riskContent.band.slice(1), icon: ShieldX, risk: riskContent.band === "critical" ? "high" as const : riskContent.band === "medium" ? "mid" as const : "low" as const },
-];
 
 const riskColors = { high: "bg-risk-high", mid: "bg-risk-mid", low: "bg-risk-low" };
 
@@ -85,18 +77,30 @@ const EmptyState = ({ message, icon: Icon }: { message: string; icon: React.Elem
 const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE = 82 }: OverviewDashboardProps) => {
   const riskContent = getRiskContent(RISK_SCORE);
   const hasExposures = EXPOSURE_COUNT > 0;
-  const metrics = getMetrics(riskContent);
+
+  const metrics = [
+    { label: "Total Exposures", value: String(EXPOSURE_COUNT), icon: AlertTriangle, risk: EXPOSURE_COUNT > 10 ? "high" as const : EXPOSURE_COUNT > 0 ? "mid" as const : "low" as const },
+    { label: "Passwords Exposed", value: String(PASSWORD_COUNT), icon: Key, risk: PASSWORD_COUNT > 5 ? "high" as const : PASSWORD_COUNT > 0 ? "mid" as const : "low" as const },
+    { label: "Leak Sources", value: String(LEAK_SOURCE_COUNT), icon: Database, risk: LEAK_SOURCE_COUNT > 3 ? "mid" as const : "low" as const },
+    { label: "Risk Level", value: riskContent.band === "none" ? "Safe" : riskContent.band.charAt(0).toUpperCase() + riskContent.band.slice(1), icon: ShieldX, risk: riskContent.band === "critical" ? "high" as const : riskContent.band === "medium" ? "mid" as const : "low" as const },
+  ];
+
+  // Build a contextual summary line for the identity block
+  const summaryLine = hasExposures
+    ? `${EXPOSURE_COUNT} exposures found across ${LEAK_SOURCE_COUNT} leak sources`
+    : "No active exposures detected";
 
   return (
     <motion.div variants={stagger} initial="hidden" animate="visible" className="py-4 lg:py-6 space-y-5">
       {/* ROW 1: Identity + Score Meter + CTA */}
-      <motion.div variants={fadeIn} className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <motion.div variants={fadeIn} className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
         {/* LEFT: User Identity */}
         <div className="lg:col-span-3 flex flex-col justify-center">
           <p className="text-caps mb-2">Personal Exposure Report</p>
           <h2 className="text-display text-lg lg:text-xl leading-tight">Rahul Sharma</h2>
           <p className="text-body text-sm mt-1">+91 98XXXXXX10</p>
-          <p className="text-body text-[11px] mt-3 opacity-50">
+          <p className="text-body text-xs mt-3 leading-relaxed">{summaryLine}</p>
+          <p className="text-body text-[11px] mt-1.5 opacity-50">
             {riskContent.supportingLine}
           </p>
         </div>
@@ -104,14 +108,14 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
         {/* CENTER: Risk Score Meter */}
         <div className="lg:col-span-5 flex flex-col items-center justify-center py-4 lg:py-0">
           <RiskScoreMeter score={RISK_SCORE} />
-          <p className="text-body text-xs mt-2 text-center">
+          <p className="text-body text-xs mt-2 text-center max-w-xs">
             {riskContent.secondarySupportingLine}
           </p>
         </div>
 
         {/* RIGHT: CTA Card */}
-        <div className="lg:col-span-4">
-          <div className="bg-foreground text-card p-6 rounded-[20px] h-full flex flex-col justify-center">
+        <div className="lg:col-span-4 flex">
+          <div className="bg-foreground text-card p-6 rounded-[20px] flex flex-col justify-center w-full">
             <ShieldAlert className="h-6 w-6 mb-3 text-primary" strokeWidth={1.5} />
             <h3 className="text-sm font-semibold mb-1">{riskContent.ctaCardTitle}</h3>
             <p className="text-xs opacity-60 mb-4 leading-relaxed">
@@ -129,14 +133,14 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
         </div>
       </motion.div>
 
-      {/* Dynamic Banner — action-oriented, no severity duplication */}
-      <motion.div variants={fadeIn} className="card-surface !px-5 !py-3.5 flex items-center gap-3">
+      {/* Dynamic Banner — compact, action-oriented */}
+      <motion.div variants={fadeIn} className="card-surface !px-5 !py-3 flex items-center gap-3">
         <div className={`h-2 w-2 rounded-full shrink-0 ${
           riskContent.band === "critical" ? "bg-destructive" :
           riskContent.band === "medium" ? "bg-risk-mid" : "bg-primary"
         }`} />
         <div className="min-w-0">
-          <h2 className="text-display text-sm lg:text-base">{riskContent.headline}</h2>
+          <h2 className="text-display text-sm">{riskContent.headline}</h2>
           <p className="text-body text-xs mt-0.5 opacity-70">{riskContent.body}</p>
         </div>
       </motion.div>
@@ -167,7 +171,7 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
 
         <motion.div variants={fadeIn} className="md:col-span-2 lg:col-span-4">
           <div className="card-surface !p-5 h-full">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-1">
               <h3 className="text-display text-sm">Top Risk Sources</h3>
               <button
                 onClick={() => onNavigate("leak-sources")}
@@ -176,6 +180,7 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
                 View all →
               </button>
             </div>
+            <p className="text-body text-[11px] mb-4">Most significant breach sources found.</p>
             {hasExposures ? (
               <div className="space-y-3">
                 {topLeaks.map((leak) => (
@@ -201,8 +206,8 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5">
         <motion.div variants={fadeIn} className="lg:col-span-8">
           <div className="card-surface !p-5">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-display text-sm">Affected Domains</h3>
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="text-display text-sm">Affected Websites</h3>
               <button
                 onClick={() => onNavigate("leak-sources")}
                 className="text-[11px] text-muted-foreground hover:text-foreground transition-colors font-medium"
@@ -210,10 +215,11 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
                 View all →
               </button>
             </div>
+            <p className="text-body text-[11px] mb-3">Websites linked to exposed records in your scan.</p>
             {hasExposures ? (
               <div className="divide-y divide-border/40">
                 {domains.map((d) => (
-                  <div key={d.name} className="flex items-center justify-between py-2 first:pt-0 last:pb-0">
+                  <div key={d.name} className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0">
                     <div className="min-w-0">
                       <span className="text-display text-xs block">{d.name}</span>
                       <span className="text-body text-[11px]">{d.type}</span>
@@ -232,7 +238,7 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
 
         <motion.div variants={fadeIn} className="lg:col-span-4">
           <div className="card-surface !p-5 h-full">
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-1">
               <h3 className="text-display text-sm">Recommendations</h3>
               <button
                 onClick={() => onNavigate("recommendations")}
@@ -241,6 +247,7 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
                 View all →
               </button>
             </div>
+            <p className="text-body text-[11px] mb-3">Most relevant next steps based on findings.</p>
             {hasExposures ? (
               <div className="space-y-3">
                 {recommendations.map((rec) => (

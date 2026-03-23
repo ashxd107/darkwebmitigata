@@ -21,7 +21,10 @@ const riskStyles: Record<string, string> = {
 const AffectedWebsites = () => (
   <section>
     <p className="text-caps mb-2">Affected Websites</p>
-    <h2 className="text-display text-2xl mb-6">Compromised domains</h2>
+    <h2 className="text-display text-2xl mb-1.5">Websites linked to exposed records</h2>
+    <p className="text-body text-sm mb-6">
+      These are the websites or services linked to the exposed records found in your scan.
+    </p>
     <div className="card-surface !p-0 divide-y divide-border/50">
       {websites.map((site, i) => (
         <motion.div

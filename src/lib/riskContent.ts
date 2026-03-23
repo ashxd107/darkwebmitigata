@@ -84,6 +84,6 @@ export function getRiskContent(score: number): RiskContent {
 export const emptyStates = {
   exposure: "No exposed credentials or personal details were found in the latest scan.",
   leakSources: "No breach sources were detected for the data checked in this scan.",
-  affectedDomains: "No compromised domains were found in the current results.",
+  affectedDomains: "No websites or services were linked to exposed records in the current results.",
   recommendations: "No urgent recommendations at this time. Keep your accounts secure.",
 };
