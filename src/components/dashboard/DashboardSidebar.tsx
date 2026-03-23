@@ -1,4 +1,4 @@
-import { Eye, Database, Lightbulb, LayoutDashboard, X, PhoneCall, MoreHorizontal, LogOut, Settings, UserRound } from "lucide-react";
+import { Eye, Database, Lightbulb, LayoutDashboard, X, PhoneCall, MoreHorizontal, LogOut, UserRound } from "lucide-react";
 import mitigataLogo from "@/assets/mitigata-logo.png";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -7,6 +7,7 @@ import { Slider } from "@/components/ui/slider";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 const menuItems = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
