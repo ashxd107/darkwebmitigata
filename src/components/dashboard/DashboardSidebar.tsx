@@ -153,7 +153,7 @@ const NavList = ({ activeItem, onNavigate, onItemClick }: { activeItem: string; 
   </ul>
 );
 
-const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose }: DashboardSidebarProps) => {
+const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, riskScore = 82, onRiskScoreChange }: DashboardSidebarProps) => {
   const isMobile = useIsMobile();
 
   if (isMobile) {
