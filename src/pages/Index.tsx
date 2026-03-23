@@ -68,6 +68,8 @@ const Index = () => {
         onInsuranceClick={() => setActiveItem("insurance")}
         mobileOpen={mobileMenuOpen}
         onMobileClose={() => setMobileMenuOpen(false)}
+        riskScore={riskScore}
+        onRiskScoreChange={setRiskScore}
       />
 
       <main className="pt-16 lg:pt-0 lg:ml-[260px] px-4 sm:px-6 lg:px-8 xl:px-12 py-4 pb-24 max-w-[1200px]">
