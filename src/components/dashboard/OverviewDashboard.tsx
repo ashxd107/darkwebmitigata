@@ -36,7 +36,7 @@ const getMetrics = (riskContent: ReturnType<typeof getRiskContent>) => [
   { label: "Total Exposures", value: String(EXPOSURE_COUNT), icon: AlertTriangle, risk: EXPOSURE_COUNT > 10 ? "high" as const : EXPOSURE_COUNT > 0 ? "mid" as const : "low" as const },
   { label: "Passwords Exposed", value: String(PASSWORD_COUNT), icon: Key, risk: PASSWORD_COUNT > 5 ? "high" as const : PASSWORD_COUNT > 0 ? "mid" as const : "low" as const },
   { label: "Leak Sources", value: String(LEAK_SOURCE_COUNT), icon: Database, risk: LEAK_SOURCE_COUNT > 3 ? "mid" as const : "low" as const },
-  { label: "Risk Level", value: riskContent.badgeLabel.replace(" Risk", ""), icon: ShieldX, risk: riskContent.band === "critical" ? "high" as const : riskContent.band === "medium" ? "mid" as const : "low" as const },
+  { label: "Risk Level", value: riskContent.band === "none" ? "Safe" : riskContent.band.charAt(0).toUpperCase() + riskContent.band.slice(1), icon: ShieldX, risk: riskContent.band === "critical" ? "high" as const : riskContent.band === "medium" ? "mid" as const : "low" as const },
 ];
 
 const riskColors = { high: "bg-risk-high", mid: "bg-risk-mid", low: "bg-risk-low" };
@@ -129,15 +129,16 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
         </div>
       </motion.div>
 
-      {/* Dynamic Banner */}
-      <motion.div variants={fadeIn} className="card-surface !p-5">
-        <div className="flex items-center gap-3">
-          <Badge variant="outline" className={`text-[10px] font-medium ${riskContent.badgeClass}`}>
-            {riskContent.badgeLabel}
-          </Badge>
-          <h2 className="text-display text-base lg:text-lg">{riskContent.headline}</h2>
+      {/* Dynamic Banner — action-oriented, no severity duplication */}
+      <motion.div variants={fadeIn} className="card-surface !px-5 !py-3.5 flex items-center gap-3">
+        <div className={`h-2 w-2 rounded-full shrink-0 ${
+          riskContent.band === "critical" ? "bg-destructive" :
+          riskContent.band === "medium" ? "bg-risk-mid" : "bg-primary"
+        }`} />
+        <div className="min-w-0">
+          <h2 className="text-display text-sm lg:text-base">{riskContent.headline}</h2>
+          <p className="text-body text-xs mt-0.5 opacity-70">{riskContent.body}</p>
         </div>
-        <p className="text-body text-sm mt-1.5">{riskContent.body}</p>
       </motion.div>
 
       {/* ROW 2: Metric Cards */}
