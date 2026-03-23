@@ -171,6 +171,7 @@ const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, r
               <p className="text-caps px-3 mb-3">Menu</p>
               <NavList activeItem={activeItem} onNavigate={onNavigate} onItemClick={onMobileClose} />
             </nav>
+            {onRiskScoreChange && <RiskScoreControl score={riskScore} onChange={onRiskScoreChange} />}
             <ProfileRow />
           </div>
         </SheetContent>
