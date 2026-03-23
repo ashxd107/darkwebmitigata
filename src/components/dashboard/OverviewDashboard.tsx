@@ -24,16 +24,13 @@ const stagger = {
 interface OverviewDashboardProps {
   onInsuranceClick: () => void;
   onNavigate: (id: string) => void;
+  riskScore?: number;
 }
 
 // Simulated data — in production this comes from API/state
-const RISK_SCORE = 82;
 const EXPOSURE_COUNT = 24;
 const PASSWORD_COUNT = 8;
 const LEAK_SOURCE_COUNT = 5;
-
-const riskContent = getRiskContent(RISK_SCORE);
-const hasExposures = EXPOSURE_COUNT > 0;
 
 const metrics = [
   { label: "Total Exposures", value: String(EXPOSURE_COUNT), icon: AlertTriangle, risk: EXPOSURE_COUNT > 10 ? "high" as const : EXPOSURE_COUNT > 0 ? "mid" as const : "low" as const },
