@@ -85,6 +85,7 @@ const EmptyState = ({ message, icon: Icon }: { message: string; icon: React.Elem
 const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE = 82 }: OverviewDashboardProps) => {
   const riskContent = getRiskContent(RISK_SCORE);
   const hasExposures = EXPOSURE_COUNT > 0;
+  const metrics = getMetrics(riskContent);
 
   return (
     <motion.div variants={stagger} initial="hidden" animate="visible" className="py-4 lg:py-6 space-y-5">
