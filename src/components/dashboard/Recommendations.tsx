@@ -5,7 +5,7 @@ import { Key, ShieldCheck, LogOut, Search, CreditCard } from "lucide-react";
 const actions = [
   {
     title: "Change your passwords immediately",
-    description: "Update passwords for all compromised accounts. Use unique, strong passwords for each service.",
+    description: "Update passwords for all affected accounts. Use unique, strong passwords for each service.",
     risk: "Critical",
     icon: Key,
   },
@@ -29,7 +29,7 @@ const actions = [
   },
   {
     title: "Monitor your financial activity",
-    description: "Watch for unauthorized transactions on your bank accounts and credit cards over the coming weeks.",
+    description: "Watch for unauthorized transactions on your bank accounts and cards over the coming weeks.",
     risk: "Medium",
     icon: CreditCard,
   },
@@ -44,7 +44,10 @@ const riskStyles: Record<string, string> = {
 const Recommendations = () => (
   <section>
     <p className="text-caps mb-2">Recommendations</p>
-    <h2 className="text-display text-2xl mb-6">What you should know</h2>
+    <h2 className="text-display text-2xl mb-1.5">What you should know</h2>
+    <p className="text-body text-sm mb-6">
+      These are the most relevant next steps based on the data found in your scan.
+    </p>
     <div className="space-y-3">
       {actions.map((action, i) => (
         <motion.div

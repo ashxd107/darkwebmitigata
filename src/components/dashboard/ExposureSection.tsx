@@ -11,18 +11,21 @@ const categories = [
   {
     id: "credentials",
     title: "Account Credentials",
+    description: "Usernames, passwords, or login-related details found in one or more exposure records.",
     icon: User,
     items: ["Username exposed", "Password exposed", "Login URLs identified"],
   },
   {
     id: "personal",
     title: "Personal Information",
+    description: "Email, phone, address, or other personal details linked to exposed records.",
     icon: Globe,
     items: ["Email address found in breaches", "Phone number detected", "Physical address partially exposed"],
   },
   {
     id: "device-session",
     title: "Device & Session Data",
+    description: "IP, operating system, browser cookies, sessions, or device-related metadata found in exposure logs.",
     icon: Monitor,
     items: [
       "IP address detected",
@@ -43,8 +46,11 @@ const ExposureSection = () => {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5 }}
     >
-      <p className="text-caps mb-2">What Was Exposed</p>
-      <h2 className="text-display text-2xl mb-6">Your compromised information</h2>
+      <p className="text-caps mb-2">Exposure</p>
+      <h2 className="text-display text-2xl mb-1.5">What was found exposed</h2>
+      <p className="text-body text-sm mb-6">
+        This section summarises the types of data found in your scan. For exact websites and records, see Leak Sources.
+      </p>
 
       <div className="card-surface !p-0 overflow-hidden">
         <Accordion type="multiple" defaultValue={["credentials", "personal", "device-session"]}>
@@ -55,10 +61,10 @@ const ExposureSection = () => {
                   <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center">
                     <cat.icon className="h-4.5 w-4.5 text-primary" strokeWidth={1.5} />
                   </div>
-                  <span className="text-display text-sm">{cat.title}</span>
-                  <span className="text-muted-foreground text-xs font-normal ml-1">
-                    {cat.items.length} items
-                  </span>
+                  <div className="text-left">
+                    <span className="text-display text-sm block">{cat.title}</span>
+                    <span className="text-body text-[11px] font-normal">{cat.description}</span>
+                  </div>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-6 pb-5">

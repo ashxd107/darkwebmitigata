@@ -89,7 +89,10 @@ const LeakSources = () => {
   return (
     <section>
       <p className="text-caps mb-2">Leak Sources</p>
-      <h2 className="text-display text-2xl mb-6">Where your data was found</h2>
+      <h2 className="text-display text-2xl mb-1.5">Where your data was found</h2>
+      <p className="text-body text-sm mb-6">
+        These records show where the exposed information appeared. Each source represents a distinct breach or exposure event.
+      </p>
       <div className="space-y-3">
         {leaks.map((leak, i) => (
           <motion.div
