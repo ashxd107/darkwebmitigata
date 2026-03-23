@@ -32,7 +32,7 @@ const EXPOSURE_COUNT = 24;
 const PASSWORD_COUNT = 8;
 const LEAK_SOURCE_COUNT = 5;
 
-const metrics = [
+const getMetrics = (riskContent: ReturnType<typeof getRiskContent>) => [
   { label: "Total Exposures", value: String(EXPOSURE_COUNT), icon: AlertTriangle, risk: EXPOSURE_COUNT > 10 ? "high" as const : EXPOSURE_COUNT > 0 ? "mid" as const : "low" as const },
   { label: "Passwords Exposed", value: String(PASSWORD_COUNT), icon: Key, risk: PASSWORD_COUNT > 5 ? "high" as const : PASSWORD_COUNT > 0 ? "mid" as const : "low" as const },
   { label: "Leak Sources", value: String(LEAK_SOURCE_COUNT), icon: Database, risk: LEAK_SOURCE_COUNT > 3 ? "mid" as const : "low" as const },
