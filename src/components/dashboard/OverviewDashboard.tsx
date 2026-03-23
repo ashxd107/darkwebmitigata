@@ -24,18 +24,15 @@ const stagger = {
 interface OverviewDashboardProps {
   onInsuranceClick: () => void;
   onNavigate: (id: string) => void;
+  riskScore?: number;
 }
 
 // Simulated data — in production this comes from API/state
-const RISK_SCORE = 82;
 const EXPOSURE_COUNT = 24;
 const PASSWORD_COUNT = 8;
 const LEAK_SOURCE_COUNT = 5;
 
-const riskContent = getRiskContent(RISK_SCORE);
-const hasExposures = EXPOSURE_COUNT > 0;
-
-const metrics = [
+const getMetrics = (riskContent: ReturnType<typeof getRiskContent>) => [
   { label: "Total Exposures", value: String(EXPOSURE_COUNT), icon: AlertTriangle, risk: EXPOSURE_COUNT > 10 ? "high" as const : EXPOSURE_COUNT > 0 ? "mid" as const : "low" as const },
   { label: "Passwords Exposed", value: String(PASSWORD_COUNT), icon: Key, risk: PASSWORD_COUNT > 5 ? "high" as const : PASSWORD_COUNT > 0 ? "mid" as const : "low" as const },
   { label: "Leak Sources", value: String(LEAK_SOURCE_COUNT), icon: Database, risk: LEAK_SOURCE_COUNT > 3 ? "mid" as const : "low" as const },
@@ -85,7 +82,11 @@ const EmptyState = ({ message, icon: Icon }: { message: string; icon: React.Elem
   </div>
 );
 
-const OverviewDashboard = ({ onInsuranceClick, onNavigate }: OverviewDashboardProps) => {
+const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE = 82 }: OverviewDashboardProps) => {
+  const riskContent = getRiskContent(RISK_SCORE);
+  const hasExposures = EXPOSURE_COUNT > 0;
+  const metrics = getMetrics(riskContent);
+
   return (
     <motion.div variants={stagger} initial="hidden" animate="visible" className="py-4 lg:py-6 space-y-5">
       {/* ROW 1: Identity + Score Meter + CTA */}

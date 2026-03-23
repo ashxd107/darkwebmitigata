@@ -3,6 +3,7 @@ import mitigataLogo from "@/assets/mitigata-logo.png";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
+import { Slider } from "@/components/ui/slider";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -27,7 +28,31 @@ interface DashboardSidebarProps {
   onInsuranceClick: () => void;
   mobileOpen?: boolean;
   onMobileClose?: () => void;
+  riskScore?: number;
+  onRiskScoreChange?: (score: number) => void;
 }
+
+const RiskScoreControl = ({ score, onChange }: { score: number; onChange: (v: number) => void }) => (
+  <div className="p-3">
+    <div className="rounded-xl bg-secondary/40 px-4 py-3 space-y-2">
+      <div className="flex items-center justify-between">
+        <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">Risk Score</span>
+        <span className="text-display text-sm font-semibold">{score}</span>
+      </div>
+      <Slider
+        value={[score]}
+        onValueChange={(v) => onChange(v[0])}
+        max={100}
+        step={1}
+        className="w-full"
+      />
+      <div className="flex justify-between text-[10px] text-muted-foreground">
+        <span>Safe</span>
+        <span>Critical</span>
+      </div>
+    </div>
+  </div>
+);
 
 const ProfileRow = () => {
   const [profileOpen, setProfileOpen] = useState(false);
@@ -128,7 +153,7 @@ const NavList = ({ activeItem, onNavigate, onItemClick }: { activeItem: string; 
   </ul>
 );
 
-const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose }: DashboardSidebarProps) => {
+const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, riskScore = 82, onRiskScoreChange }: DashboardSidebarProps) => {
   const isMobile = useIsMobile();
 
   if (isMobile) {
@@ -146,6 +171,7 @@ const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose }:
               <p className="text-caps px-3 mb-3">Menu</p>
               <NavList activeItem={activeItem} onNavigate={onNavigate} onItemClick={onMobileClose} />
             </nav>
+            {onRiskScoreChange && <RiskScoreControl score={riskScore} onChange={onRiskScoreChange} />}
             <ProfileRow />
           </div>
         </SheetContent>
@@ -162,6 +188,7 @@ const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose }:
         <p className="text-caps px-3 mb-3">Menu</p>
         <NavList activeItem={activeItem} onNavigate={onNavigate} />
       </nav>
+      {onRiskScoreChange && <RiskScoreControl score={riskScore} onChange={onRiskScoreChange} />}
       <ProfileRow />
     </aside>
   );
