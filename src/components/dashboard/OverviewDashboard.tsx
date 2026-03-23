@@ -129,15 +129,16 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
         </div>
       </motion.div>
 
-      {/* Dynamic Banner */}
-      <motion.div variants={fadeIn} className="card-surface !p-5">
-        <div className="flex items-center gap-3">
-          <Badge variant="outline" className={`text-[10px] font-medium ${riskContent.badgeClass}`}>
-            {riskContent.badgeLabel}
-          </Badge>
-          <h2 className="text-display text-base lg:text-lg">{riskContent.headline}</h2>
+      {/* Dynamic Banner — action-oriented, no severity duplication */}
+      <motion.div variants={fadeIn} className="card-surface !px-5 !py-3.5 flex items-center gap-3">
+        <div className={`h-2 w-2 rounded-full shrink-0 ${
+          riskContent.band === "critical" ? "bg-destructive" :
+          riskContent.band === "medium" ? "bg-risk-mid" : "bg-primary"
+        }`} />
+        <div className="min-w-0">
+          <h2 className="text-display text-sm lg:text-base">{riskContent.headline}</h2>
+          <p className="text-body text-xs mt-0.5 opacity-70">{riskContent.body}</p>
         </div>
-        <p className="text-body text-sm mt-1.5">{riskContent.body}</p>
       </motion.div>
 
       {/* ROW 2: Metric Cards */}
