@@ -15,6 +15,7 @@ const Index = () => {
   const [activeItem, setActiveItem] = useState("overview");
   const [insuranceOpen, setInsuranceOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [riskScore, setRiskScore] = useState(82);
 
   const renderContent = () => {
     switch (activeItem) {
