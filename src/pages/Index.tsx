@@ -4,7 +4,7 @@ import MobileHeader from "@/components/dashboard/MobileHeader";
 import OverviewDashboard from "@/components/dashboard/OverviewDashboard";
 import ExposureSection from "@/components/dashboard/ExposureSection";
 import LeakSources from "@/components/dashboard/LeakSources";
-import AffectedWebsites from "@/components/dashboard/AffectedWebsites";
+
 import Recommendations from "@/components/dashboard/Recommendations";
 import InsurancePage from "@/components/dashboard/InsurancePage";
 import CallAssistance from "@/components/dashboard/CallAssistance";
