@@ -35,9 +35,8 @@ const Index = () => {
         );
       case "leak-sources":
         return (
-          <div className="py-4 lg:py-8 space-y-8 lg:space-y-14">
+          <div className="py-4 lg:py-8">
             <LeakSources />
-            <AffectedWebsites />
           </div>
         );
       case "recommendations":

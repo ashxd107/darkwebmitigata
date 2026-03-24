@@ -2,14 +2,12 @@ import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import {
   ArrowRight, AlertTriangle, Key, Database, ShieldX,
-  User, Globe, Monitor, Lock, ShieldCheck, CreditCard, ShieldAlert,
-  CheckCircle2,
+  ShieldCheck, CreditCard, ShieldAlert, CheckCircle2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import RiskScoreMeter from "./RiskScoreMeter";
 import ExposureBreakdownChart from "./ExposureBreakdownChart";
-import SeverityDistribution from "./SeverityDistribution";
-import { getRiskContent, emptyStates, type RiskBand } from "@/lib/riskContent";
+import { getRiskContent, emptyStates } from "@/lib/riskContent";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 10 },
@@ -33,24 +31,10 @@ const LEAK_SOURCE_COUNT = 5;
 
 const riskColors = { high: "bg-risk-high", mid: "bg-risk-mid", low: "bg-risk-low" };
 
-const exposureItems = [
-  { icon: User, label: "Username & password exposed" },
-  { icon: Globe, label: "Email & phone detected" },
-  { icon: Monitor, label: "IP address & OS identified" },
-  { icon: Lock, label: "Browser cookies & sessions found" },
-];
-
 const topLeaks = [
   { source: "Malware Log", impact: "Password exposed", risk: "Critical" },
   { source: "Social Platform", impact: "Credential breach", risk: "High" },
   { source: "Shopping Site", impact: "Session hijack risk", risk: "High" },
-];
-
-const domains = [
-  { name: "email-provider.com", type: "Password leak", risk: "Critical" },
-  { name: "social-network.com", type: "Credential breach", risk: "High" },
-  { name: "shopping-site.com", type: "Session exposure", risk: "High" },
-  { name: "cloud-storage.io", type: "Password leak", risk: "Medium" },
 ];
 
 const recommendations = [
@@ -85,32 +69,28 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
     { label: "Risk Level", value: riskContent.band === "none" ? "Safe" : riskContent.band.charAt(0).toUpperCase() + riskContent.band.slice(1), icon: ShieldX, risk: riskContent.band === "critical" ? "high" as const : riskContent.band === "medium" ? "mid" as const : "low" as const },
   ];
 
-  // Build a contextual summary line for the identity block
   const summaryLine = hasExposures
     ? `${EXPOSURE_COUNT} exposures found across ${LEAK_SOURCE_COUNT} leak sources`
     : "No active exposures detected";
 
   return (
     <motion.div variants={stagger} initial="hidden" animate="visible" className="py-4 lg:py-6 space-y-5">
-      {/* ROW 1: Identity + Score Meter + CTA */}
+      {/* ROW 1: Score Meter + User Identity | CTA */}
       <motion.div variants={fadeIn} className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-        {/* LEFT: User Identity */}
-        <div className="lg:col-span-3 flex flex-col justify-center">
-          <p className="text-caps mb-2">Personal Exposure Report</p>
-          <h2 className="text-display text-lg lg:text-xl leading-tight">Rahul Sharma</h2>
-          <p className="text-body text-sm mt-1">+91 98XXXXXX10</p>
-          <p className="text-body text-xs mt-3 leading-relaxed">{summaryLine}</p>
-          <p className="text-body text-[11px] mt-1.5 opacity-50">
-            {riskContent.supportingLine}
-          </p>
-        </div>
+        {/* LEFT: Score Meter + User Identity as one composed block */}
+        <div className="lg:col-span-8 card-surface !p-6 flex flex-col sm:flex-row items-center gap-6">
+          {/* Score Meter — primary visual anchor */}
+          <div className="flex flex-col items-center shrink-0">
+            <RiskScoreMeter score={RISK_SCORE} />
+          </div>
 
-        {/* CENTER: Risk Score Meter */}
-        <div className="lg:col-span-5 flex flex-col items-center justify-center py-4 lg:py-0">
-          <RiskScoreMeter score={RISK_SCORE} />
-          <p className="text-body text-xs mt-2 text-center max-w-xs">
-            {riskContent.secondarySupportingLine}
-          </p>
+          {/* User Identity — attached to score */}
+          <div className="flex flex-col justify-center text-center sm:text-left">
+            <p className="text-caps mb-1.5">Personal Exposure Report</p>
+            <h2 className="text-display text-lg lg:text-xl leading-tight">Rahul Sharma</h2>
+            <p className="text-body text-sm mt-1">+91 98XXXXXX10</p>
+            <p className="text-body text-xs mt-3 leading-relaxed">{summaryLine}</p>
+          </div>
         </div>
 
         {/* RIGHT: CTA Card */}
@@ -133,7 +113,7 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
         </div>
       </motion.div>
 
-      {/* Dynamic Banner — compact, action-oriented */}
+      {/* Alert Banner — compact, action-oriented */}
       <motion.div variants={fadeIn} className="card-surface !px-5 !py-3 flex items-center gap-3">
         <div className={`h-2 w-2 rounded-full shrink-0 ${
           riskContent.band === "critical" ? "bg-destructive" :
@@ -159,17 +139,13 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
         ))}
       </motion.div>
 
-      {/* ROW 3: Exposure Breakdown + Severity + Top Risks */}
+      {/* ROW 3: Exposure Breakdown + Top Risk Sources + Recommendations */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 lg:gap-5">
         <motion.div variants={fadeIn} className="md:col-span-1 lg:col-span-4">
           <ExposureBreakdownChart />
         </motion.div>
 
         <motion.div variants={fadeIn} className="md:col-span-1 lg:col-span-4">
-          <SeverityDistribution />
-        </motion.div>
-
-        <motion.div variants={fadeIn} className="md:col-span-2 lg:col-span-4">
           <div className="card-surface !p-5 h-full">
             <div className="flex items-center justify-between mb-1">
               <h3 className="text-display text-sm">Top Risk Sources</h3>
@@ -200,43 +176,8 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
             )}
           </div>
         </motion.div>
-      </div>
 
-      {/* ROW 4: Domains + Recommendations */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5">
-        <motion.div variants={fadeIn} className="lg:col-span-8">
-          <div className="card-surface !p-5">
-            <div className="flex items-center justify-between mb-1">
-              <h3 className="text-display text-sm">Affected Websites</h3>
-              <button
-                onClick={() => onNavigate("leak-sources")}
-                className="text-[11px] text-muted-foreground hover:text-foreground transition-colors font-medium"
-              >
-                View all →
-              </button>
-            </div>
-            <p className="text-body text-[11px] mb-3">Websites linked to exposed records in your scan.</p>
-            {hasExposures ? (
-              <div className="divide-y divide-border/40">
-                {domains.map((d) => (
-                  <div key={d.name} className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0">
-                    <div className="min-w-0">
-                      <span className="text-display text-xs block">{d.name}</span>
-                      <span className="text-body text-[11px]">{d.type}</span>
-                    </div>
-                    <Badge variant="outline" className={`text-[9px] font-medium shrink-0 ${riskBadge[d.risk]}`}>
-                      {d.risk}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <EmptyState message={emptyStates.affectedDomains} icon={CheckCircle2} />
-            )}
-          </div>
-        </motion.div>
-
-        <motion.div variants={fadeIn} className="lg:col-span-4">
+        <motion.div variants={fadeIn} className="md:col-span-2 lg:col-span-4">
           <div className="card-surface !p-5 h-full">
             <div className="flex items-center justify-between mb-1">
               <h3 className="text-display text-sm">Recommendations</h3>
