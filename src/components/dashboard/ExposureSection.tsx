@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { User, Globe, Monitor } from "lucide-react";
+import { User, Globe, Monitor, Lock } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -14,9 +14,9 @@ const categories = [
     description: "Usernames, passwords, or login-related details found in one or more exposure records.",
     icon: User,
     items: [
-      { service: "Gmail", detail: "username found: rahul****@gmail.com" },
-      { service: "shopping-site.com", detail: "password exposure found" },
-      { service: "social-network.com", detail: "login URL identified" },
+      { service: "Gmail", detail: "username found: rahul****@gmail.com", locked: false },
+      { service: "shopping-site.com", detail: "password exposure found", locked: true },
+      { service: "social-network.com", detail: "login URL identified", locked: true },
     ],
   },
   {
@@ -25,9 +25,9 @@ const categories = [
     description: "Email, phone, address, or other personal details linked to exposed records.",
     icon: Globe,
     items: [
-      { service: "rahul****@gmail.com", detail: "found in breach data" },
-      { service: "Phone number", detail: "detected in linked account records" },
-      { service: "Physical address", detail: "partially exposed in one source" },
+      { service: "rahul****@gmail.com", detail: "found in breach data", locked: false },
+      { service: "Phone number", detail: "detected in linked account records", locked: false },
+      { service: "Physical address", detail: "partially exposed in one source", locked: true },
     ],
   },
   {
@@ -36,14 +36,19 @@ const categories = [
     description: "IP, browser sessions, cookies, and device-related metadata found in exposure logs.",
     icon: Monitor,
     items: [
-      { service: "Malware log", detail: "browser cookies found" },
-      { service: "Session record", detail: "device name found" },
-      { service: "Exposure source", detail: "IP linked to session data" },
+      { service: "Malware log", detail: "browser cookies found", locked: true },
+      { service: "Session record", detail: "device name found", locked: true },
+      { service: "Exposure source", detail: "IP linked to session data", locked: true },
     ],
   },
 ];
 
-const ExposureSection = () => {
+interface ExposureSectionProps {
+  isUnlocked?: boolean;
+  onUnlock?: () => void;
+}
+
+const ExposureSection = ({ isUnlocked = false, onUnlock }: ExposureSectionProps) => {
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -74,22 +79,57 @@ const ExposureSection = () => {
               </AccordionTrigger>
               <AccordionContent className="px-6 pb-5">
                 <ul className="space-y-2.5 pl-12">
-                  {cat.items.map((item) => (
-                    <li key={item.service + item.detail} className="flex items-start gap-2.5">
-                      <div className="h-1.5 w-1.5 rounded-full bg-risk-mid mt-2 shrink-0" />
-                      <span className="text-body text-sm">
-                        <span className="text-display">{item.service}</span>
-                        {" — "}
-                        {item.detail}
-                      </span>
-                    </li>
-                  ))}
+                  {cat.items.map((item) => {
+                    const isLocked = item.locked && !isUnlocked;
+                    return (
+                      <li key={item.service + item.detail} className="flex items-start gap-2.5">
+                        <div className={`h-1.5 w-1.5 rounded-full mt-2 shrink-0 ${isLocked ? "bg-muted-foreground/30" : "bg-risk-mid"}`} />
+                        {isLocked ? (
+                          <span className="text-body text-sm flex items-center gap-2">
+                            <span className="text-display">{item.service}</span>
+                            {" — "}
+                            <span className="bg-muted/80 text-transparent select-none rounded px-1" style={{ filter: "blur(4px)" }}>
+                              {item.detail}
+                            </span>
+                            <Lock className="h-3 w-3 text-muted-foreground shrink-0" strokeWidth={1.5} />
+                          </span>
+                        ) : (
+                          <span className="text-body text-sm">
+                            <span className="text-display">{item.service}</span>
+                            {" — "}
+                            {item.detail}
+                          </span>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
       </div>
+
+      {/* Unlock CTA for free users */}
+      {!isUnlocked && onUnlock && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.4 }}
+          className="mt-4 card-surface !p-5 flex items-center gap-4"
+        >
+          <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+            <Lock className="h-4 w-4 text-primary" strokeWidth={1.5} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-display text-sm">Some details are hidden</p>
+            <p className="text-body text-xs">Unlock the full report to see all exposed data and breach context.</p>
+          </div>
+          <button onClick={onUnlock} className="text-primary text-xs font-semibold hover:text-primary/80 transition-colors shrink-0">
+            Unlock for ₹49 →
+          </button>
+        </motion.div>
+      )}
     </motion.section>
   );
 };

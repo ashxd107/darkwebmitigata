@@ -4,44 +4,72 @@ import MobileHeader from "@/components/dashboard/MobileHeader";
 import OverviewDashboard from "@/components/dashboard/OverviewDashboard";
 import ExposureSection from "@/components/dashboard/ExposureSection";
 import LeakSources from "@/components/dashboard/LeakSources";
-
 import Recommendations from "@/components/dashboard/Recommendations";
 import InsurancePage from "@/components/dashboard/InsurancePage";
 import CallAssistance from "@/components/dashboard/CallAssistance";
 import StickyCTA from "@/components/dashboard/StickyCTA";
 import InsuranceFlow from "@/components/dashboard/InsuranceFlow";
+import InsuranceSuccess from "@/components/dashboard/InsuranceSuccess";
+import UnlockCTA from "@/components/dashboard/UnlockCTA";
+import LockedOverlay from "@/components/dashboard/LockedOverlay";
 
 const Index = () => {
   const [activeItem, setActiveItem] = useState("overview");
   const [insuranceOpen, setInsuranceOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [riskScore, setRiskScore] = useState(82);
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [insuranceSuccess, setInsuranceSuccess] = useState(false);
+
+  const handleUnlock = () => {
+    setIsUnlocked(true);
+  };
+
+  const handleInsuranceComplete = () => {
+    setInsuranceOpen(false);
+    setInsuranceSuccess(true);
+    setActiveItem("insurance-success");
+  };
 
   const renderContent = () => {
+    if (activeItem === "insurance-success" && insuranceSuccess) {
+      return (
+        <div className="py-4 lg:py-8">
+          <InsuranceSuccess onGoToDashboard={() => { setActiveItem("overview"); setInsuranceSuccess(false); }} />
+        </div>
+      );
+    }
+
     switch (activeItem) {
       case "overview":
         return (
-          <OverviewDashboard
-            onInsuranceClick={() => setInsuranceOpen(true)}
-            onNavigate={setActiveItem}
-            riskScore={riskScore}
-          />
+          <>
+            <OverviewDashboard
+              onInsuranceClick={() => setInsuranceOpen(true)}
+              onNavigate={setActiveItem}
+              riskScore={riskScore}
+              isUnlocked={isUnlocked}
+            />
+            {!isUnlocked && <UnlockCTA onUnlock={handleUnlock} />}
+          </>
         );
       case "exposure":
         return (
           <div className="py-4 lg:py-8">
-            <ExposureSection />
+            <ExposureSection isUnlocked={isUnlocked} onUnlock={handleUnlock} />
           </div>
         );
       case "leak-sources":
         return (
-          <div className="py-4 lg:py-8">
+          <div className="py-4 lg:py-8 relative">
+            {!isUnlocked && <LockedOverlay onUnlock={handleUnlock} />}
             <LeakSources />
           </div>
         );
       case "recommendations":
         return (
-          <div className="py-4 lg:py-8">
+          <div className="py-4 lg:py-8 relative">
+            {!isUnlocked && <LockedOverlay onUnlock={handleUnlock} />}
             <Recommendations />
           </div>
         );
@@ -75,10 +103,10 @@ const Index = () => {
         {renderContent()}
       </main>
 
-      {activeItem !== "insurance" && (
+      {activeItem !== "insurance" && activeItem !== "insurance-success" && (
         <StickyCTA onClick={() => setInsuranceOpen(true)} />
       )}
-      <InsuranceFlow open={insuranceOpen} onClose={() => setInsuranceOpen(false)} />
+      <InsuranceFlow open={insuranceOpen} onClose={() => setInsuranceOpen(false)} onSuccess={handleInsuranceComplete} />
     </div>
   );
 };
