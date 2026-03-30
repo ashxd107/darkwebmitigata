@@ -1,4 +1,4 @@
-import { Eye, Database, Lightbulb, LayoutDashboard, X, PhoneCall, MoreHorizontal, LogOut, UserRound, FileSearch } from "lucide-react";
+import { Eye, Database, Lightbulb, LayoutDashboard, X, PhoneCall, MoreHorizontal, LogOut, UserRound, FileSearch, FileText, Key, Clock } from "lucide-react";
 import mitigataLogo from "@/assets/mitigata-logo.png";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -19,6 +19,13 @@ const baseMenuItems = [
   { id: "call-assistance", label: "Call Assistance", icon: PhoneCall },
 ];
 
+const compSubNavItems = [
+  { id: "comp-documents", label: "Documents", icon: FileText },
+  { id: "comp-leak-sources", label: "Leak Sources", icon: Database },
+  { id: "comp-passwords", label: "Passwords", icon: Key },
+  { id: "comp-timeline", label: "Timeline", icon: Clock },
+];
+
 const getMenuItems = (flowType: FlowType, compStatus?: ComprehensiveStatus) => {
   if (flowType === "comprehensive") {
     const compItem = {
@@ -27,8 +34,9 @@ const getMenuItems = (flowType: FlowType, compStatus?: ComprehensiveStatus) => {
       icon: FileSearch,
       badge: compStatus === "pending" ? "In Progress" : compStatus === "ready" ? "Ready" : undefined,
     };
-    // Insert after overview
-    return [baseMenuItems[0], compItem, ...baseMenuItems.slice(1)];
+    // Remove leak-sources from main nav for comprehensive flow
+    const filtered = baseMenuItems.filter(item => item.id !== "leak-sources");
+    return [filtered[0], compItem, ...filtered.slice(1)];
   }
   return baseMenuItems;
 };
