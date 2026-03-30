@@ -157,10 +157,11 @@ const ProfileRow = () => {
   );
 };
 
-const NavList = ({ activeItem, onNavigate, onItemClick }: { activeItem: string; onNavigate: (id: string) => void; onItemClick?: () => void }) => (
+const NavList = ({ activeItem, onNavigate, onItemClick, items }: { activeItem: string; onNavigate: (id: string) => void; onItemClick?: () => void; items: ReturnType<typeof getMenuItems> }) => (
   <ul className="space-y-1">
-    {menuItems.map((item) => {
+    {items.map((item) => {
       const isActive = activeItem === item.id;
+      const badge = "badge" in item ? (item as any).badge : undefined;
       return (
         <li key={item.id}>
           <button
@@ -178,7 +179,12 @@ const NavList = ({ activeItem, onNavigate, onItemClick }: { activeItem: string; 
               className={`h-[18px] w-[18px] shrink-0 ${isActive ? "text-primary" : ""}`}
               strokeWidth={isActive ? 2 : 1.5}
             />
-            <span>{item.label}</span>
+            <span className="flex-1 text-left">{item.label}</span>
+            {badge && (
+              <Badge variant="outline" className="text-[8px] font-medium px-1.5 py-0 bg-primary/10 text-primary border-primary/20">
+                {badge}
+              </Badge>
+            )}
           </button>
         </li>
       );
@@ -186,7 +192,9 @@ const NavList = ({ activeItem, onNavigate, onItemClick }: { activeItem: string; 
   </ul>
 );
 
-const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, riskScore = 82, onRiskScoreChange }: DashboardSidebarProps) => {
+const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, riskScore = 82, onRiskScoreChange, flowType = "normal", compStatus }: DashboardSidebarProps) => {
+  const isMobile = useIsMobile();
+  const menuItems = getMenuItems(flowType, compStatus);
   const isMobile = useIsMobile();
 
   if (isMobile) {
