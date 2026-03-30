@@ -61,7 +61,7 @@ const EmptyState = ({ message, icon: Icon }: { message: string; icon: React.Elem
   </div>
 );
 
-const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE = 82, isUnlocked = false }: OverviewDashboardProps) => {
+const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE = 82, isUnlocked = false, onUnlock }: OverviewDashboardProps) => {
   const riskContent = getRiskContent(RISK_SCORE);
   const hasExposures = EXPOSURE_COUNT > 0;
 
