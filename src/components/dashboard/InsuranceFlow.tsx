@@ -18,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 interface InsuranceFlowProps {
   open: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
 type MemberRelation = "Self" | "Spouse" | "Child";
@@ -95,7 +96,7 @@ const stepVariants = {
   exit: { opacity: 0, x: -40, transition: { duration: 0.3 } },
 };
 
-const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
+const InsuranceFlow = ({ open, onClose, onSuccess }: InsuranceFlowProps) => {
   const [step, setStep] = useState(1);
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [sumInsured, setSumInsured] = useState<SumInsured>(50000);
@@ -136,7 +137,12 @@ const InsuranceFlow = ({ open, onClose }: InsuranceFlowProps) => {
   const hasChild = members.some((m) => m.relation === "Child");
 
   const handlePayAttempt = () => {
-    setPaymentFailed(true);
+    if (onSuccess) {
+      handleClose();
+      onSuccess();
+    } else {
+      setPaymentFailed(true);
+    }
   };
 
   const handleClose = () => {

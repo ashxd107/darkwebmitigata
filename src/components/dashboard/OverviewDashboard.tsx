@@ -2,12 +2,13 @@ import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import {
   ArrowRight, AlertTriangle, Key, Database, ShieldX,
-  ShieldCheck, CreditCard, ShieldAlert, CheckCircle2,
+  ShieldCheck, CreditCard, ShieldAlert, CheckCircle2, Lock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import RiskScoreMeter from "./RiskScoreMeter";
 import ExposureBreakdownChart from "./ExposureBreakdownChart";
 import { getRiskContent, emptyStates } from "@/lib/riskContent";
+import LockedOverlay from "./LockedOverlay";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 10 },
@@ -23,6 +24,7 @@ interface OverviewDashboardProps {
   onInsuranceClick: () => void;
   onNavigate: (id: string) => void;
   riskScore?: number;
+  isUnlocked?: boolean;
 }
 
 const EXPOSURE_COUNT = 24;
@@ -58,14 +60,14 @@ const EmptyState = ({ message, icon: Icon }: { message: string; icon: React.Elem
   </div>
 );
 
-const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE = 82 }: OverviewDashboardProps) => {
+const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE = 82, isUnlocked = false }: OverviewDashboardProps) => {
   const riskContent = getRiskContent(RISK_SCORE);
   const hasExposures = EXPOSURE_COUNT > 0;
 
   const metrics = [
     { label: "Total Exposures", value: String(EXPOSURE_COUNT), icon: AlertTriangle, risk: EXPOSURE_COUNT > 10 ? "high" as const : EXPOSURE_COUNT > 0 ? "mid" as const : "low" as const },
-    { label: "Passwords Exposed", value: String(PASSWORD_COUNT), icon: Key, risk: PASSWORD_COUNT > 5 ? "high" as const : PASSWORD_COUNT > 0 ? "mid" as const : "low" as const },
-    { label: "Leak Sources", value: String(LEAK_SOURCE_COUNT), icon: Database, risk: LEAK_SOURCE_COUNT > 3 ? "mid" as const : "low" as const },
+    { label: "Passwords Exposed", value: isUnlocked ? String(PASSWORD_COUNT) : "—", icon: Key, risk: PASSWORD_COUNT > 5 ? "high" as const : PASSWORD_COUNT > 0 ? "mid" as const : "low" as const },
+    { label: "Leak Sources", value: isUnlocked ? String(LEAK_SOURCE_COUNT) : "—", icon: Database, risk: LEAK_SOURCE_COUNT > 3 ? "mid" as const : "low" as const },
     { label: "Risk Level", value: riskContent.band === "none" ? "Safe" : riskContent.band.charAt(0).toUpperCase() + riskContent.band.slice(1), icon: ShieldX, risk: riskContent.band === "critical" ? "high" as const : riskContent.band === "medium" ? "mid" as const : "low" as const },
   ];
 
@@ -75,32 +77,37 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
 
   return (
     <motion.div variants={stagger} initial="hidden" animate="visible" className="py-4 lg:py-6 space-y-5">
+      {/* FREE PREVIEW BADGE */}
+      {!isUnlocked && (
+        <motion.div variants={fadeIn} className="flex items-center gap-2">
+          <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-xs font-medium px-3 py-1">
+            <Lock className="h-3 w-3 mr-1.5" />
+            Free Preview
+          </Badge>
+          <span className="text-body text-xs">Limited report view</span>
+        </motion.div>
+      )}
+
       {/* ROW 1: Score Meter + User Identity | CTA */}
       <motion.div variants={fadeIn} className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-        {/* LEFT: Score Meter + User Identity as one composed block */}
         <div className="lg:col-span-8 card-surface !p-6 flex flex-col sm:flex-row items-center gap-6">
-          {/* Score Meter — primary visual anchor */}
           <div className="flex flex-col items-center shrink-0">
             <RiskScoreMeter score={RISK_SCORE} />
           </div>
-
-          {/* User Identity — attached to score */}
           <div className="flex flex-col justify-center text-center sm:text-left">
             <p className="text-caps mb-1.5">Personal Exposure Report</p>
             <h2 className="text-display text-lg lg:text-xl leading-tight">Rahul Sharma</h2>
-            <p className="text-body text-sm mt-1">+91 98XXXXXX10</p>
+            <p className="text-body text-sm mt-1">rahul****@gmail.com</p>
+            <p className="text-body text-sm mt-0.5">+91 98XXXXXX10</p>
             <p className="text-body text-xs mt-3 leading-relaxed">{summaryLine}</p>
           </div>
         </div>
 
-        {/* RIGHT: CTA Card */}
         <div className="lg:col-span-4 flex">
           <div className="bg-foreground text-card p-6 rounded-[20px] flex flex-col justify-center w-full">
             <ShieldAlert className="h-6 w-6 mb-3 text-primary" strokeWidth={1.5} />
             <h3 className="text-sm font-semibold mb-1">{riskContent.ctaCardTitle}</h3>
-            <p className="text-xs opacity-60 mb-4 leading-relaxed">
-              {riskContent.ctaCardBody}
-            </p>
+            <p className="text-xs opacity-60 mb-4 leading-relaxed">{riskContent.ctaCardBody}</p>
             <Button
               onClick={onInsuranceClick}
               size="sm"
@@ -113,7 +120,7 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
         </div>
       </motion.div>
 
-      {/* Alert Banner — compact, action-oriented */}
+      {/* Alert Banner */}
       <motion.div variants={fadeIn} className="card-surface !px-5 !py-3 flex items-center gap-3">
         <div className={`h-2 w-2 rounded-full shrink-0 ${
           riskContent.band === "critical" ? "bg-destructive" :
@@ -139,8 +146,10 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
         ))}
       </motion.div>
 
-      {/* ROW 3: Exposure Breakdown + Top Risk Sources + Recommendations */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 lg:gap-5">
+      {/* ROW 3: Locked grid for free users, full for unlocked */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 lg:gap-5 relative">
+        {!isUnlocked && <LockedOverlay onUnlock={() => {}} compact />}
+        
         <motion.div variants={fadeIn} className="md:col-span-1 lg:col-span-4">
           <ExposureBreakdownChart />
         </motion.div>
