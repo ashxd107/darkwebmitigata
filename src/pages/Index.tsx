@@ -113,6 +113,7 @@ const Index = () => {
         <StickyCTA onClick={() => setInsuranceOpen(true)} />
       )}
       <InsuranceFlow open={insuranceOpen} onClose={() => setInsuranceOpen(false)} onSuccess={handleInsuranceComplete} />
+      <UnlockPaymentModal open={paymentModalOpen} onClose={() => setPaymentModalOpen(false)} onSuccess={handlePaymentSuccess} />
     </div>
   );
 };
