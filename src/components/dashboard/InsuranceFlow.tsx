@@ -18,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 interface InsuranceFlowProps {
   open: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
 type MemberRelation = "Self" | "Spouse" | "Child";
