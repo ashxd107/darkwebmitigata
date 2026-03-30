@@ -60,16 +60,14 @@ const StickyCTA = ({ onClick }: StickyCTAProps) => {
         <div className="bg-card/95 backdrop-blur-md border-t border-border/30 px-4 py-2.5 flex items-center gap-3">
           <div className="flex-1 min-w-0 flex items-center gap-2">
             <ShieldCheck className="text-primary w-4 h-4 shrink-0" strokeWidth={1.5} />
-            <p className="text-body text-[11px] truncate">
-              {!isUnlocked ? "Unlock full report for ₹49" : "Get financial protection"}
-            </p>
+            <p className="text-body text-[11px] truncate">Get financial protection</p>
           </div>
           <Button
-            onClick={!isUnlocked && onUnlock ? onUnlock : onClick}
+            onClick={onClick}
             size="sm"
             className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg px-3 font-semibold text-xs h-8 shrink-0"
           >
-            {!isUnlocked ? "Unlock ₹49" : "Get Protected"}
+            Get Protected
           </Button>
           <button
             onClick={() => setDismissed(true)}

@@ -111,7 +111,7 @@ const Index = () => {
       </main>
 
       {activeItem !== "insurance" && activeItem !== "insurance-success" && (
-        <StickyCTA onClick={() => setInsuranceOpen(true)} isUnlocked={isUnlocked} onUnlock={handleUnlock} />
+        <StickyCTA onClick={() => setInsuranceOpen(true)} />
       )}
       <InsuranceFlow open={insuranceOpen} onClose={() => setInsuranceOpen(false)} onSuccess={handleInsuranceComplete} />
       <UnlockPaymentModal open={paymentModalOpen} onClose={() => setPaymentModalOpen(false)} onSuccess={handlePaymentSuccess} />
