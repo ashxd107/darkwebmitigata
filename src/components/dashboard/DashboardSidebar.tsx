@@ -1,4 +1,4 @@
-import { Eye, Database, Lightbulb, LayoutDashboard, X, PhoneCall, MoreHorizontal, LogOut, UserRound } from "lucide-react";
+import { Eye, Database, Lightbulb, LayoutDashboard, X, PhoneCall, MoreHorizontal, LogOut, UserRound, FileSearch } from "lucide-react";
 import mitigataLogo from "@/assets/mitigata-logo.png";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -8,14 +8,30 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
+import type { FlowType, ComprehensiveStatus } from "@/types/flow";
 
-const menuItems = [
+const baseMenuItems = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
   { id: "leak-sources", label: "Leak Sources", icon: Database },
   { id: "exposure", label: "Exposure", icon: Eye },
   { id: "recommendations", label: "Recommendations", icon: Lightbulb },
   { id: "call-assistance", label: "Call Assistance", icon: PhoneCall },
 ];
+
+const getMenuItems = (flowType: FlowType, compStatus?: ComprehensiveStatus) => {
+  if (flowType === "comprehensive") {
+    const compItem = {
+      id: "comprehensive-report",
+      label: "Comprehensive Report",
+      icon: FileSearch,
+      badge: compStatus === "pending" ? "In Progress" : compStatus === "ready" ? "Ready" : undefined,
+    };
+    // Insert after overview
+    return [baseMenuItems[0], compItem, ...baseMenuItems.slice(1)];
+  }
+  return baseMenuItems;
+};
 
 const userData = {
   name: "Rahul Sharma",
