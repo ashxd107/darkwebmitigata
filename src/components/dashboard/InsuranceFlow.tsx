@@ -137,7 +137,12 @@ const InsuranceFlow = ({ open, onClose, onSuccess }: InsuranceFlowProps) => {
   const hasChild = members.some((m) => m.relation === "Child");
 
   const handlePayAttempt = () => {
-    setPaymentFailed(true);
+    if (onSuccess) {
+      handleClose();
+      onSuccess();
+    } else {
+      setPaymentFailed(true);
+    }
   };
 
   const handleClose = () => {
