@@ -11,8 +11,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 
 const menuItems = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
-  { id: "exposure", label: "Exposure", icon: Eye },
   { id: "leak-sources", label: "Leak Sources", icon: Database },
+  { id: "exposure", label: "Exposure", icon: Eye },
   { id: "recommendations", label: "Recommendations", icon: Lightbulb },
   { id: "call-assistance", label: "Call Assistance", icon: PhoneCall },
 ];
