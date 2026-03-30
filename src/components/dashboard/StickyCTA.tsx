@@ -5,8 +5,6 @@ import { Button } from "@/components/ui/button";
 
 interface StickyCTAProps {
   onClick: () => void;
-  isUnlocked?: boolean;
-  onUnlock?: () => void;
 }
 
 const StickyCTA = ({ onClick, isUnlocked = false, onUnlock }: StickyCTAProps) => {
