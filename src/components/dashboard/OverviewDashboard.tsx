@@ -25,6 +25,7 @@ interface OverviewDashboardProps {
   onNavigate: (id: string) => void;
   riskScore?: number;
   isUnlocked?: boolean;
+  onUnlock?: () => void;
 }
 
 const EXPOSURE_COUNT = 24;
