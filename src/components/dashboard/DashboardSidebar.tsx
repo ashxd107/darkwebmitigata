@@ -1,4 +1,4 @@
-import { Eye, Database, Lightbulb, LayoutDashboard, X, PhoneCall, MoreHorizontal, LogOut, UserRound } from "lucide-react";
+import { Eye, Database, Lightbulb, LayoutDashboard, X, PhoneCall, MoreHorizontal, LogOut, UserRound, FileSearch } from "lucide-react";
 import mitigataLogo from "@/assets/mitigata-logo.png";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -8,14 +8,30 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
+import type { FlowType, ComprehensiveStatus } from "@/types/flow";
 
-const menuItems = [
+const baseMenuItems = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
   { id: "leak-sources", label: "Leak Sources", icon: Database },
   { id: "exposure", label: "Exposure", icon: Eye },
   { id: "recommendations", label: "Recommendations", icon: Lightbulb },
   { id: "call-assistance", label: "Call Assistance", icon: PhoneCall },
 ];
+
+const getMenuItems = (flowType: FlowType, compStatus?: ComprehensiveStatus) => {
+  if (flowType === "comprehensive") {
+    const compItem = {
+      id: "comprehensive-report",
+      label: "Comprehensive Report",
+      icon: FileSearch,
+      badge: compStatus === "pending" ? "In Progress" : compStatus === "ready" ? "Ready" : undefined,
+    };
+    // Insert after overview
+    return [baseMenuItems[0], compItem, ...baseMenuItems.slice(1)];
+  }
+  return baseMenuItems;
+};
 
 const userData = {
   name: "Rahul Sharma",
@@ -31,6 +47,8 @@ interface DashboardSidebarProps {
   onMobileClose?: () => void;
   riskScore?: number;
   onRiskScoreChange?: (score: number) => void;
+  flowType?: FlowType;
+  compStatus?: ComprehensiveStatus;
 }
 
 const RiskScoreControl = ({ score, onChange }: { score: number; onChange: (v: number) => void }) => (
@@ -139,10 +157,11 @@ const ProfileRow = () => {
   );
 };
 
-const NavList = ({ activeItem, onNavigate, onItemClick }: { activeItem: string; onNavigate: (id: string) => void; onItemClick?: () => void }) => (
+const NavList = ({ activeItem, onNavigate, onItemClick, items }: { activeItem: string; onNavigate: (id: string) => void; onItemClick?: () => void; items: ReturnType<typeof getMenuItems> }) => (
   <ul className="space-y-1">
-    {menuItems.map((item) => {
+    {items.map((item) => {
       const isActive = activeItem === item.id;
+      const badge = "badge" in item ? (item as any).badge : undefined;
       return (
         <li key={item.id}>
           <button
@@ -160,7 +179,12 @@ const NavList = ({ activeItem, onNavigate, onItemClick }: { activeItem: string; 
               className={`h-[18px] w-[18px] shrink-0 ${isActive ? "text-primary" : ""}`}
               strokeWidth={isActive ? 2 : 1.5}
             />
-            <span>{item.label}</span>
+            <span className="flex-1 text-left">{item.label}</span>
+            {badge && (
+              <Badge variant="outline" className="text-[8px] font-medium px-1.5 py-0 bg-primary/10 text-primary border-primary/20">
+                {badge}
+              </Badge>
+            )}
           </button>
         </li>
       );
@@ -168,7 +192,7 @@ const NavList = ({ activeItem, onNavigate, onItemClick }: { activeItem: string; 
   </ul>
 );
 
-const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, riskScore = 82, onRiskScoreChange }: DashboardSidebarProps) => {
+const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, riskScore = 82, onRiskScoreChange, flowType = "normal", compStatus }: DashboardSidebarProps) => {
   const isMobile = useIsMobile();
 
   if (isMobile) {
@@ -184,7 +208,7 @@ const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, r
             </div>
             <nav className="flex-1 px-3 py-2">
               <p className="text-caps px-3 mb-3">Menu</p>
-              <NavList activeItem={activeItem} onNavigate={onNavigate} onItemClick={onMobileClose} />
+              <NavList activeItem={activeItem} onNavigate={onNavigate} onItemClick={onMobileClose} items={getMenuItems(flowType, compStatus)} />
             </nav>
             {onRiskScoreChange && <RiskScoreControl score={riskScore} onChange={onRiskScoreChange} />}
             <ProfileRow />
@@ -201,7 +225,7 @@ const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, r
       </div>
       <nav className="flex-1 px-3 py-4">
         <p className="text-caps px-3 mb-3">Menu</p>
-        <NavList activeItem={activeItem} onNavigate={onNavigate} />
+        <NavList activeItem={activeItem} onNavigate={onNavigate} items={getMenuItems(flowType, compStatus)} />
       </nav>
       {onRiskScoreChange && <RiskScoreControl score={riskScore} onChange={onRiskScoreChange} />}
       <ProfileRow />
