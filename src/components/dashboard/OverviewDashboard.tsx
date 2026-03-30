@@ -149,7 +149,7 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
 
       {/* ROW 3: Locked grid for free users, full for unlocked */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 lg:gap-5 relative">
-        {!isUnlocked && <LockedOverlay onUnlock={() => {}} compact />}
+        {!isUnlocked && onUnlock && <LockedOverlay onUnlock={onUnlock} compact />}
         
         <motion.div variants={fadeIn} className="md:col-span-1 lg:col-span-4">
           <ExposureBreakdownChart />
