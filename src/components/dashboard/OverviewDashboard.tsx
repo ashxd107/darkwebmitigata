@@ -106,17 +106,38 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
 
         <div className="lg:col-span-4 flex">
           <div className="bg-foreground text-card p-6 rounded-[20px] flex flex-col justify-center w-full">
-            <ShieldAlert className="h-6 w-6 mb-3 text-primary" strokeWidth={1.5} />
-            <h3 className="text-sm font-semibold mb-1">{riskContent.ctaCardTitle}</h3>
-            <p className="text-xs opacity-60 mb-4 leading-relaxed">{riskContent.ctaCardBody}</p>
-            <Button
-              onClick={onInsuranceClick}
-              size="sm"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg px-4 w-fit font-semibold text-xs"
-            >
-              {riskContent.ctaLabel}
-              <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-            </Button>
+            {!isUnlocked ? (
+              <>
+                <Lock className="h-6 w-6 mb-3 text-primary" strokeWidth={1.5} />
+                <h3 className="text-sm font-semibold mb-1">Unlock full report</h3>
+                <p className="text-xs opacity-60 mb-4 leading-relaxed">
+                  See complete leak details, breach source records, and recommended actions.
+                </p>
+                <Button
+                  onClick={onUnlock}
+                  size="sm"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg px-4 w-fit font-semibold text-xs"
+                >
+                  Unlock for ₹49
+                  <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                </Button>
+                <p className="text-[10px] opacity-40 mt-2">One-time payment to access the full report</p>
+              </>
+            ) : (
+              <>
+                <ShieldAlert className="h-6 w-6 mb-3 text-primary" strokeWidth={1.5} />
+                <h3 className="text-sm font-semibold mb-1">{riskContent.ctaCardTitle}</h3>
+                <p className="text-xs opacity-60 mb-4 leading-relaxed">{riskContent.ctaCardBody}</p>
+                <Button
+                  onClick={onInsuranceClick}
+                  size="sm"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg px-4 w-fit font-semibold text-xs"
+                >
+                  {riskContent.ctaLabel}
+                  <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </motion.div>

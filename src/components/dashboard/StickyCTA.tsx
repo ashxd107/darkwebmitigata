@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button";
 
 interface StickyCTAProps {
   onClick: () => void;
+  isUnlocked?: boolean;
+  onUnlock?: () => void;
 }
 
-const StickyCTA = ({ onClick }: StickyCTAProps) => {
+const StickyCTA = ({ onClick, isUnlocked = false, onUnlock }: StickyCTAProps) => {
   const [dismissed, setDismissed] = useState(false);
 
   if (dismissed) return null;
@@ -27,16 +29,19 @@ const StickyCTA = ({ onClick }: StickyCTAProps) => {
           <div className="flex items-center gap-3">
             <ShieldCheck className="text-primary w-4 h-4 shrink-0" strokeWidth={1.5} />
             <p className="text-body text-xs">
-              Protect yourself against fraud — <span className="text-display text-xs">get covered now</span>
+              {!isUnlocked
+                ? <>Unlock the full report — <span className="text-display text-xs">₹49 one-time</span></>
+                : <>Protect yourself against fraud — <span className="text-display text-xs">get covered now</span></>
+              }
             </p>
           </div>
           <div className="flex items-center gap-2">
             <Button
-              onClick={onClick}
+              onClick={!isUnlocked && onUnlock ? onUnlock : onClick}
               size="sm"
               className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg px-4 font-semibold text-xs h-8"
             >
-              Get Cyber Insurance
+              {!isUnlocked ? "Unlock for ₹49" : "Get Cyber Insurance"}
             </Button>
             <button
               onClick={() => setDismissed(true)}
@@ -60,14 +65,16 @@ const StickyCTA = ({ onClick }: StickyCTAProps) => {
         <div className="bg-card/95 backdrop-blur-md border-t border-border/30 px-4 py-2.5 flex items-center gap-3">
           <div className="flex-1 min-w-0 flex items-center gap-2">
             <ShieldCheck className="text-primary w-4 h-4 shrink-0" strokeWidth={1.5} />
-            <p className="text-body text-[11px] truncate">Get financial protection</p>
+            <p className="text-body text-[11px] truncate">
+              {!isUnlocked ? "Unlock full report for ₹49" : "Get financial protection"}
+            </p>
           </div>
           <Button
-            onClick={onClick}
+            onClick={!isUnlocked && onUnlock ? onUnlock : onClick}
             size="sm"
             className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg px-3 font-semibold text-xs h-8 shrink-0"
           >
-            Get Protected
+            {!isUnlocked ? "Unlock ₹49" : "Get Protected"}
           </Button>
           <button
             onClick={() => setDismissed(true)}
