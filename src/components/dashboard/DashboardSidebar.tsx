@@ -47,6 +47,8 @@ interface DashboardSidebarProps {
   onMobileClose?: () => void;
   riskScore?: number;
   onRiskScoreChange?: (score: number) => void;
+  flowType?: FlowType;
+  compStatus?: ComprehensiveStatus;
 }
 
 const RiskScoreControl = ({ score, onChange }: { score: number; onChange: (v: number) => void }) => (
