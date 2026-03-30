@@ -61,9 +61,8 @@ const Index = () => {
         );
       case "leak-sources":
         return (
-          <div className="py-4 lg:py-8 relative">
-            {!isUnlocked && <LockedOverlay onUnlock={handleUnlock} />}
-            <LeakSources />
+          <div className="py-4 lg:py-8">
+            <LeakSources isUnlocked={isUnlocked} onUnlock={handleUnlock} />
           </div>
         );
       case "recommendations":

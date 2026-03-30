@@ -1,78 +1,85 @@
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
-import { useState } from "react";
-import LeakDetailDrawer from "./LeakDetailDrawer";
+import { ArrowRight, Lock } from "lucide-react";
 
-const leaks = [
+interface LeakField {
+  label: string;
+  value: string;
+  sensitive?: boolean;
+  fullWidth?: boolean;
+  freeVisible?: boolean;
+}
+
+interface LeakSource {
+  id: number;
+  title: string;
+  risk: "Critical" | "High" | "Medium" | "Low";
+  contextLine: string;
+  fields: LeakField[];
+}
+
+const leakSources: LeakSource[] = [
   {
     id: 1,
-    title: "Malware Log Exposure",
-    date: "Mar 15, 2026",
-    domain: "email-provider.com",
-    summary: "Your login credentials were found in a malware data dump.",
-    risk: "Critical" as const,
-    details: {
-      username: "john.d****@email.com",
-      password: "••••••••••",
-      website: "email-provider.com",
-      ip: "192.168.•••.•••",
-      os: "Windows 11",
-      country: "United States",
-      malware: "Info Stealer detected",
-    },
+    title: "HiTeckGroop.in — JIO Karnataka (Cellular Operator)",
+    risk: "Critical",
+    contextLine: "Leak Details — Early 2025 • 1.8B records (300M unique) from Indian cellular operators",
+    fields: [
+      { label: "Full Name", value: "Rahul Sharma", freeVisible: false },
+      { label: "Email", value: "rahul****@gmail.com", freeVisible: true },
+      { label: "Password", value: "••••••••••", freeVisible: true, sensitive: true },
+      { label: "Phone 1", value: "+91 93810XXXXX", freeVisible: false, sensitive: true },
+      { label: "Phone 2", value: "+91 88005XXXXX", freeVisible: false, sensitive: true },
+      { label: "Region", value: "JIO Karnataka", freeVisible: false },
+      { label: "Aadhaar Card", value: "XXXX XXXX 6042", freeVisible: false, sensitive: true },
+      { label: "Source Date", value: "Early 2025", freeVisible: false },
+      { label: "Address", value: "C/O T V S P Sekhar, NO-001 1ST FLOOR KRISHNA REDDY ENCLAVE, SHANABUGH LAYOUT, Bengaluru, Karnataka", fullWidth: true, freeVisible: false },
+    ],
   },
   {
     id: 2,
-    title: "Data Breach – Social Platform",
-    date: "Mar 10, 2026",
-    domain: "social-network.com",
-    summary: "Your email and hashed password were part of a platform-wide breach.",
-    risk: "High" as const,
-    details: {
-      username: "john.d****",
-      password: "••••••••••",
-      website: "social-network.com",
-      ip: "—",
-      os: "—",
-      country: "—",
-      malware: "Not applicable",
-    },
+    title: "Alien TxtBase — Stealer Log Combolist",
+    risk: "High",
+    contextLine: "Leak Details — Early 2025 • 2.8B unique records from stealer logs (browser-stored credentials)",
+    fields: [
+      { label: "Full Name", value: "Rahul Sharma", freeVisible: false },
+      { label: "Email", value: "rahul****@gmail.com", freeVisible: true },
+      { label: "Password", value: "••••••••••", freeVisible: true, sensitive: true },
+      { label: "Phone 1", value: "+91 93810XXXXX", freeVisible: false, sensitive: true },
+      { label: "Source Type", value: "Stealer Log", freeVisible: false },
+      { label: "Source Date", value: "Early 2025", freeVisible: false },
+      { label: "Region", value: "India", freeVisible: false },
+    ],
   },
   {
     id: 3,
-    title: "Session Hijack Risk",
-    date: "Mar 8, 2026",
-    domain: "shopping-site.com",
-    summary: "Browser cookies and session tokens were exposed, risking account takeover.",
-    risk: "High" as const,
-    details: {
-      username: "j.doe****",
-      password: "—",
-      website: "shopping-site.com",
-      ip: "10.0.•••.•••",
-      os: "macOS Ventura",
-      country: "United States",
-      malware: "Not applicable",
-    },
+    title: "DarkForums Dump — Financial Services Platform",
+    risk: "Critical",
+    contextLine: "Leak Details — Late 2024 • 450M records from financial and banking platforms",
+    fields: [
+      { label: "Full Name", value: "Rahul Sharma", freeVisible: false },
+      { label: "Email", value: "rahul****@gmail.com", freeVisible: true },
+      { label: "Password", value: "••••••••••", freeVisible: true, sensitive: true },
+      { label: "Phone 1", value: "+91 93810XXXXX", freeVisible: false, sensitive: true },
+      { label: "PAN Card", value: "ABCDE12XXF", freeVisible: false, sensitive: true },
+      { label: "Source Type", value: "Database Dump", freeVisible: false },
+      { label: "Source Date", value: "Late 2024", freeVisible: false },
+      { label: "Region", value: "India", freeVisible: false },
+      { label: "Address", value: "HSR Layout, Bengaluru, Karnataka 560102", fullWidth: true, freeVisible: false },
+    ],
   },
   {
     id: 4,
-    title: "Credential Dump",
-    date: "Feb 28, 2026",
-    domain: "cloud-storage.io",
-    summary: "Login credentials and access tokens appeared in a public credential dump.",
-    risk: "Medium" as const,
-    details: {
-      username: "johndoe****",
-      password: "••••••••••",
-      website: "cloud-storage.io",
-      ip: "—",
-      os: "—",
-      country: "—",
-      malware: "Not applicable",
-    },
+    title: "BreachDB — Social Media Credential Dump",
+    risk: "Medium",
+    contextLine: "Leak Details — Mid 2024 • 800M records from social media platform breaches",
+    fields: [
+      { label: "Email", value: "rahul****@gmail.com", freeVisible: true },
+      { label: "Password", value: "••••••••••", freeVisible: true, sensitive: true },
+      { label: "Source Type", value: "Credential Dump", freeVisible: false },
+      { label: "Source Date", value: "Mid 2024", freeVisible: false },
+    ],
   },
 ];
 
@@ -83,56 +90,184 @@ const riskStyles: Record<string, string> = {
   Low: "bg-muted text-muted-foreground border-border",
 };
 
-const LeakSources = () => {
-  const [selectedLeak, setSelectedLeak] = useState<typeof leaks[0] | null>(null);
+interface LeakSourcesProps {
+  isUnlocked?: boolean;
+  onUnlock?: () => void;
+}
+
+const FieldCard = ({ label, value, locked, sensitive }: { label: string; value: string; locked: boolean; sensitive?: boolean }) => (
+  <div className="bg-secondary/50 rounded-2xl px-5 py-4">
+    <p className="text-caps mb-1.5">{label}</p>
+    {locked ? (
+      <div className="flex items-center gap-2">
+        <span
+          className="text-display text-sm select-none text-transparent bg-muted/80 rounded px-1"
+          style={{ filter: "blur(5px)" }}
+        >
+          {value}
+        </span>
+        <Lock className="h-3 w-3 text-muted-foreground" strokeWidth={1.5} />
+      </div>
+    ) : (
+      <p className={`text-display text-sm ${sensitive ? "text-destructive" : ""}`}>{value}</p>
+    )}
+  </div>
+);
+
+const LeakSources = ({ isUnlocked = false, onUnlock }: LeakSourcesProps) => {
+  const visibleSources = isUnlocked ? leakSources : leakSources.slice(0, 2);
+  const totalCount = leakSources.length;
 
   return (
     <section>
-      <p className="text-caps mb-2">Leak Sources</p>
+      <p className="text-caps mb-2">Leak Source Details — {totalCount} Sources</p>
       <h2 className="text-display text-2xl mb-1.5">Where your data was found</h2>
       <p className="text-body text-sm mb-6">
-        These records show where the exposed information appeared. Each source represents a distinct breach or exposure event.
+        {isUnlocked
+          ? "Each source below represents a distinct breach or exposure event where your information was identified."
+          : "You're viewing a limited preview. Unlock the full report to see all sources and complete details."}
       </p>
-      <div className="space-y-3">
-        {leaks.map((leak, i) => (
-          <motion.div
-            key={leak.id}
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.08, duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
-            className="card-surface flex flex-col sm:flex-row sm:items-center gap-4"
-          >
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 mb-1.5">
-                <h3 className="text-display text-sm">{leak.title}</h3>
-                <Badge variant="outline" className={`text-[10px] font-medium ${riskStyles[leak.risk]}`}>
-                  {leak.risk}
+
+      <div className="space-y-5">
+        {visibleSources.map((source, i) => {
+          const visibleFields = isUnlocked
+            ? source.fields
+            : source.fields.filter((f) => f.freeVisible);
+
+          const lockedFields = isUnlocked
+            ? []
+            : source.fields.filter((f) => !f.freeVisible);
+
+          const regularFields = visibleFields.filter((f) => !f.fullWidth);
+          const fullWidthFields = visibleFields.filter((f) => f.fullWidth);
+          const lockedRegular = lockedFields.filter((f) => !f.fullWidth);
+
+          return (
+            <motion.div
+              key={source.id}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.08, duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
+              className="card-surface !p-0 overflow-hidden"
+            >
+              {/* Header */}
+              <div className="flex items-center gap-4 px-6 py-5 border-b border-border/30">
+                <div className="h-8 w-8 rounded-xl bg-secondary flex items-center justify-center shrink-0">
+                  <span className="text-display text-xs">{source.id}</span>
+                </div>
+                <h3 className="text-display text-sm flex-1 min-w-0">{source.title}</h3>
+                <Badge variant="outline" className={`text-[10px] font-medium shrink-0 ${riskStyles[source.risk]}`}>
+                  {source.risk}
                 </Badge>
               </div>
-              <p className="text-body text-sm leading-relaxed">{leak.summary}</p>
-              <div className="flex gap-4 mt-2.5">
-                <span className="text-caps">{leak.domain}</span>
-                <span className="text-caps">{leak.date}</span>
+
+              {/* Context line */}
+              <div className="px-6 pt-4 pb-2">
+                <p className="text-caps text-[9px]">{source.contextLine}</p>
               </div>
-            </div>
-            <Button
-              variant="ghost"
-              className="text-sm text-muted-foreground hover:text-foreground shrink-0"
-              onClick={() => setSelectedLeak(leak)}
-            >
-              View details
-              <ChevronRight className="ml-1 h-4 w-4" />
-            </Button>
-          </motion.div>
-        ))}
+
+              {/* Detail grid */}
+              <div className="px-6 pb-5 pt-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {regularFields.map((field) => (
+                    <FieldCard
+                      key={field.label}
+                      label={field.label}
+                      value={field.value}
+                      locked={false}
+                      sensitive={field.sensitive}
+                    />
+                  ))}
+                  {/* Show locked previews for non-free fields */}
+                  {!isUnlocked && lockedRegular.slice(0, 3).map((field) => (
+                    <FieldCard
+                      key={field.label}
+                      label={field.label}
+                      value={field.value}
+                      locked={true}
+                      sensitive={field.sensitive}
+                    />
+                  ))}
+                </div>
+
+                {/* Full-width fields */}
+                {isUnlocked && fullWidthFields.map((field) => (
+                  <div key={field.label} className="mt-3">
+                    <FieldCard
+                      label={field.label}
+                      value={field.value}
+                      locked={false}
+                    />
+                  </div>
+                ))}
+
+                {/* Locked full-width preview */}
+                {!isUnlocked && source.fields.filter(f => f.fullWidth).length > 0 && (
+                  <div className="mt-3">
+                    <FieldCard
+                      label="Address"
+                      value="Full address available in complete report"
+                      locked={true}
+                    />
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
 
-      <LeakDetailDrawer
-        leak={selectedLeak}
-        open={!!selectedLeak}
-        onClose={() => setSelectedLeak(null)}
-      />
+      {/* Remaining sources locked indicator + CTA */}
+      {!isUnlocked && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.4 }}
+          className="mt-5 space-y-4"
+        >
+          {/* Locked source previews */}
+          {leakSources.slice(2).map((source) => (
+            <div key={source.id} className="card-surface relative overflow-hidden">
+              <div className="absolute inset-0 bg-card/70 backdrop-blur-[6px] z-10 flex items-center justify-center rounded-[20px]">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Lock className="h-4 w-4" strokeWidth={1.5} />
+                  <span className="text-display text-xs">Locked</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-4 opacity-40">
+                <div className="h-8 w-8 rounded-xl bg-secondary flex items-center justify-center shrink-0">
+                  <span className="text-display text-xs">{source.id}</span>
+                </div>
+                <h3 className="text-display text-sm flex-1">{source.title}</h3>
+                <Badge variant="outline" className={`text-[10px] font-medium ${riskStyles[source.risk]}`}>
+                  {source.risk}
+                </Badge>
+              </div>
+            </div>
+          ))}
+
+          {/* Unlock CTA */}
+          <div className="card-surface !p-6 flex flex-col sm:flex-row items-center gap-5">
+            <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
+              <Lock className="h-6 w-6 text-primary" strokeWidth={1.5} />
+            </div>
+            <div className="flex-1 text-center sm:text-left">
+              <h3 className="text-display text-base mb-1">Unlock full report for ₹49</h3>
+              <p className="text-body text-sm leading-relaxed">
+                See all leak sources, full breach details, and complete exposed information.
+              </p>
+            </div>
+            <Button
+              onClick={onUnlock}
+              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-6 py-2.5 h-auto font-semibold text-sm shrink-0"
+            >
+              Unlock Full Report
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        </motion.div>
+      )}
     </section>
   );
 };
