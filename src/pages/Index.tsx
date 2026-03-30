@@ -58,7 +58,7 @@ const Index = () => {
               isUnlocked={isUnlocked}
               onUnlock={handleUnlock}
             />
-            {!isUnlocked && <UnlockCTA onUnlock={handleUnlock} />}
+            
           </>
         );
       case "exposure":
