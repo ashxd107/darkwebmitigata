@@ -56,6 +56,7 @@ const Index = () => {
               onNavigate={setActiveItem}
               riskScore={riskScore}
               isUnlocked={isUnlocked}
+              onUnlock={handleUnlock}
             />
             {!isUnlocked && <UnlockCTA onUnlock={handleUnlock} />}
           </>
