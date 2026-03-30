@@ -60,8 +60,8 @@ const Dashboard = () => {
       );
     }
 
-    // Comprehensive report section
-    if (activeItem === "comprehensive-report" && flowType === "comprehensive") {
+    // Comprehensive report sections (main or sub-nav items)
+    if (flowType === "comprehensive" && (activeItem === "comprehensive-report" || activeItem.startsWith("comp-"))) {
       if (compStatus === "pending") {
         return (
           <ComprehensivePending
@@ -70,7 +70,7 @@ const Dashboard = () => {
           />
         );
       }
-      return <ComprehensiveReport />;
+      return <ComprehensiveReport activeSection={activeItem === "comprehensive-report" ? "comp-documents" : activeItem} />;
     }
 
     switch (activeItem) {
