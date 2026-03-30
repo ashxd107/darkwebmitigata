@@ -194,8 +194,6 @@ const NavList = ({ activeItem, onNavigate, onItemClick, items }: { activeItem: s
 
 const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, riskScore = 82, onRiskScoreChange, flowType = "normal", compStatus }: DashboardSidebarProps) => {
   const isMobile = useIsMobile();
-  const menuItems = getMenuItems(flowType, compStatus);
-  const isMobile = useIsMobile();
 
   if (isMobile) {
     return (
