@@ -9,7 +9,7 @@ interface StickyCTAProps {
   onUnlock?: () => void;
 }
 
-const StickyCTA = ({ onClick }: StickyCTAProps) => {
+const StickyCTA = ({ onClick, isUnlocked = false, onUnlock }: StickyCTAProps) => {
   const [dismissed, setDismissed] = useState(false);
 
   if (dismissed) return null;
