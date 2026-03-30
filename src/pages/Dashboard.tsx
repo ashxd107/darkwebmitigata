@@ -28,8 +28,8 @@ const Dashboard = () => {
   const [insuranceSuccess, setInsuranceSuccess] = useState(false);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
 
-  // Normal flow: unlock state
-  const [isUnlocked, setIsUnlocked] = useState(flowType === "basic");
+  // Normal flow: unlock state. Basic and comprehensive users get full access.
+  const [isUnlocked, setIsUnlocked] = useState(flowType === "basic" || flowType === "comprehensive");
 
   // Comprehensive flow: report status
   const [compStatus, setCompStatus] = useState<ComprehensiveStatus>("pending");
