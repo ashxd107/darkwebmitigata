@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ShieldCheck, Mail, Phone, ArrowRight } from "lucide-react";
+import { ShieldCheck, Mail, Phone, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface InsuranceSuccessProps {
@@ -8,52 +8,88 @@ interface InsuranceSuccessProps {
 
 const InsuranceSuccess = ({ onGoToDashboard }: InsuranceSuccessProps) => (
   <motion.div
-    initial={{ opacity: 0, scale: 0.95 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
-    className="flex items-center justify-center min-h-[60vh]"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6, ease: [0.2, 0.8, 0.2, 1] }}
+    className="flex items-center justify-center min-h-[70vh] px-4"
   >
-    <div className="card-surface !p-8 sm:!p-10 max-w-md w-full text-center">
-      {/* Success Icon */}
-      <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
-        <ShieldCheck className="h-8 w-8 text-primary" strokeWidth={1.5} />
-      </div>
-
-      {/* Title */}
-      <h2 className="text-display text-xl sm:text-2xl mb-2">Thank you for purchasing</h2>
-      <p className="text-body text-sm mb-1">Your policy has been successfully activated.</p>
-      <p className="text-body text-xs opacity-70 mb-8">
-        You will receive your policy by email within 24 hours.
-      </p>
-
-      {/* Divider */}
-      <div className="border-t border-border/30 mb-6" />
-
-      {/* Support Section */}
-      <div className="space-y-3 mb-8">
-        <p className="text-caps">Need help?</p>
-        <div className="flex items-center justify-center gap-2.5">
-          <Mail className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
-          <a href="mailto:contact@mitigata.com" className="text-display text-sm hover:text-primary transition-colors">
-            contact@mitigata.com
-          </a>
-        </div>
-        <div className="flex items-center justify-center gap-2.5">
-          <Phone className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
-          <a href="tel:+919876543210" className="text-display text-sm hover:text-primary transition-colors">
-            +91 98765 43210
-          </a>
-        </div>
-      </div>
-
-      {/* CTA */}
-      <Button
-        onClick={onGoToDashboard}
-        className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-6 py-2.5 h-auto font-semibold text-sm w-full sm:w-auto"
+    <div className="max-w-lg w-full">
+      {/* Success Animation */}
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.2, duration: 0.5, type: "spring", stiffness: 200, damping: 15 }}
+        className="flex justify-center mb-8"
       >
-        Go to Dashboard
-        <ArrowRight className="ml-2 h-4 w-4" />
-      </Button>
+        <div className="relative">
+          <div className="h-20 w-20 rounded-full bg-primary/10 flex items-center justify-center">
+            <ShieldCheck className="h-10 w-10 text-primary" strokeWidth={1.5} />
+          </div>
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.3 }}
+            className="absolute -bottom-1 -right-1 h-7 w-7 rounded-full bg-primary flex items-center justify-center"
+          >
+            <CheckCircle2 className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
+          </motion.div>
+        </div>
+      </motion.div>
+
+      {/* Main Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.5 }}
+        className="card-surface !p-8 sm:!p-10 text-center"
+      >
+        {/* Title */}
+        <h2 className="text-display text-2xl sm:text-[28px] mb-3 leading-tight">
+          Thank you for purchasing
+        </h2>
+        <p className="text-body text-sm sm:text-base mb-2">
+          Your policy has been successfully activated.
+        </p>
+
+        {/* Policy Delivery Note */}
+        <div className="inline-flex items-center gap-2 bg-primary/5 border border-primary/10 rounded-xl px-4 py-2.5 mt-4 mb-8">
+          <Mail className="h-4 w-4 text-primary shrink-0" strokeWidth={1.5} />
+          <p className="text-display text-xs sm:text-sm font-medium">
+            You will receive your policy by email within 24 hours
+          </p>
+        </div>
+
+        {/* Divider */}
+        <div className="border-t border-border/40 mb-6" />
+
+        {/* Support Section */}
+        <p className="text-caps mb-4">Need help? Contact us</p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mb-8">
+          <a
+            href="mailto:contact@mitigata.com"
+            className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-muted/50 hover:bg-muted transition-colors group"
+          >
+            <Mail className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" strokeWidth={1.5} />
+            <span className="text-display text-sm">contact@mitigata.com</span>
+          </a>
+          <a
+            href="tel:+919876543210"
+            className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-muted/50 hover:bg-muted transition-colors group"
+          >
+            <Phone className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" strokeWidth={1.5} />
+            <span className="text-display text-sm">+91 98765 43210</span>
+          </a>
+        </div>
+
+        {/* CTA */}
+        <Button
+          onClick={onGoToDashboard}
+          className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-8 py-3 h-auto font-semibold text-sm w-full sm:w-auto"
+        >
+          Go to Dashboard
+          <ArrowRight className="ml-2 h-4 w-4" />
+        </Button>
+      </motion.div>
     </div>
   </motion.div>
 );
