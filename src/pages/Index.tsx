@@ -12,6 +12,7 @@ import InsuranceFlow from "@/components/dashboard/InsuranceFlow";
 import InsuranceSuccess from "@/components/dashboard/InsuranceSuccess";
 import UnlockCTA from "@/components/dashboard/UnlockCTA";
 import LockedOverlay from "@/components/dashboard/LockedOverlay";
+import UnlockPaymentModal from "@/components/dashboard/UnlockPaymentModal";
 
 const Index = () => {
   const [activeItem, setActiveItem] = useState("overview");
@@ -20,8 +21,14 @@ const Index = () => {
   const [riskScore, setRiskScore] = useState(82);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [insuranceSuccess, setInsuranceSuccess] = useState(false);
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
 
   const handleUnlock = () => {
+    setPaymentModalOpen(true);
+  };
+
+  const handlePaymentSuccess = () => {
+    setPaymentModalOpen(false);
     setIsUnlocked(true);
   };
 
@@ -106,6 +113,7 @@ const Index = () => {
         <StickyCTA onClick={() => setInsuranceOpen(true)} />
       )}
       <InsuranceFlow open={insuranceOpen} onClose={() => setInsuranceOpen(false)} onSuccess={handleInsuranceComplete} />
+      <UnlockPaymentModal open={paymentModalOpen} onClose={() => setPaymentModalOpen(false)} onSuccess={handlePaymentSuccess} />
     </div>
   );
 };
