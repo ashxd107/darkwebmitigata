@@ -28,8 +28,8 @@ const Dashboard = () => {
   const [insuranceSuccess, setInsuranceSuccess] = useState(false);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
 
-  // Normal flow: unlock state
-  const [isUnlocked, setIsUnlocked] = useState(flowType === "basic");
+  // Normal flow: unlock state. Basic and comprehensive users get full access.
+  const [isUnlocked, setIsUnlocked] = useState(flowType === "basic" || flowType === "comprehensive");
 
   // Comprehensive flow: report status
   const [compStatus, setCompStatus] = useState<ComprehensiveStatus>("pending");
@@ -60,8 +60,8 @@ const Dashboard = () => {
       );
     }
 
-    // Comprehensive report section
-    if (activeItem === "comprehensive-report" && flowType === "comprehensive") {
+    // Comprehensive report sections (main or sub-nav items)
+    if (flowType === "comprehensive" && (activeItem === "comprehensive-report" || activeItem.startsWith("comp-"))) {
       if (compStatus === "pending") {
         return (
           <ComprehensivePending
@@ -70,7 +70,7 @@ const Dashboard = () => {
           />
         );
       }
-      return <ComprehensiveReport />;
+      return <ComprehensiveReport activeSection={activeItem === "comprehensive-report" ? "comp-documents" : activeItem} />;
     }
 
     switch (activeItem) {

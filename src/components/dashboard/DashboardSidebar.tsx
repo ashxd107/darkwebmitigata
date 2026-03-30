@@ -1,4 +1,4 @@
-import { Eye, Database, Lightbulb, LayoutDashboard, X, PhoneCall, MoreHorizontal, LogOut, UserRound, FileSearch } from "lucide-react";
+import { Eye, Database, Lightbulb, LayoutDashboard, X, PhoneCall, MoreHorizontal, LogOut, UserRound, FileSearch, FileText, Key, Clock } from "lucide-react";
 import mitigataLogo from "@/assets/mitigata-logo.png";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -19,6 +19,13 @@ const baseMenuItems = [
   { id: "call-assistance", label: "Call Assistance", icon: PhoneCall },
 ];
 
+const compSubNavItems = [
+  { id: "comp-documents", label: "Documents", icon: FileText },
+  { id: "comp-leak-sources", label: "Leak Sources", icon: Database },
+  { id: "comp-passwords", label: "Passwords", icon: Key },
+  { id: "comp-timeline", label: "Timeline", icon: Clock },
+];
+
 const getMenuItems = (flowType: FlowType, compStatus?: ComprehensiveStatus) => {
   if (flowType === "comprehensive") {
     const compItem = {
@@ -27,8 +34,9 @@ const getMenuItems = (flowType: FlowType, compStatus?: ComprehensiveStatus) => {
       icon: FileSearch,
       badge: compStatus === "pending" ? "In Progress" : compStatus === "ready" ? "Ready" : undefined,
     };
-    // Insert after overview
-    return [baseMenuItems[0], compItem, ...baseMenuItems.slice(1)];
+    // Remove leak-sources from main nav for comprehensive flow
+    const filtered = baseMenuItems.filter(item => item.id !== "leak-sources");
+    return [filtered[0], compItem, ...filtered.slice(1)];
   }
   return baseMenuItems;
 };
@@ -157,40 +165,80 @@ const ProfileRow = () => {
   );
 };
 
-const NavList = ({ activeItem, onNavigate, onItemClick, items }: { activeItem: string; onNavigate: (id: string) => void; onItemClick?: () => void; items: ReturnType<typeof getMenuItems> }) => (
-  <ul className="space-y-1">
-    {items.map((item) => {
-      const isActive = activeItem === item.id;
-      const badge = "badge" in item ? (item as any).badge : undefined;
-      return (
-        <li key={item.id}>
-          <button
-            onClick={() => { onNavigate(item.id); onItemClick?.(); }}
-            className={`
-              w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
-              transition-all duration-200
-              ${isActive
-                ? "bg-primary/8 text-foreground font-semibold shadow-[inset_0_1px_2px_rgba(4,219,127,0.08)]"
-                : "text-muted-foreground font-medium hover:bg-secondary/60 hover:text-foreground"
-              }
-            `}
-          >
-            <item.icon
-              className={`h-[18px] w-[18px] shrink-0 ${isActive ? "text-primary" : ""}`}
-              strokeWidth={isActive ? 2 : 1.5}
-            />
-            <span className="flex-1 text-left">{item.label}</span>
-            {badge && (
-              <Badge variant="outline" className="text-[8px] font-medium px-1.5 py-0 bg-primary/10 text-primary border-primary/20">
-                {badge}
-              </Badge>
+const NavList = ({ activeItem, onNavigate, onItemClick, items, flowType, compStatus }: { 
+  activeItem: string; 
+  onNavigate: (id: string) => void; 
+  onItemClick?: () => void; 
+  items: ReturnType<typeof getMenuItems>;
+  flowType?: FlowType;
+  compStatus?: ComprehensiveStatus;
+}) => {
+  const isCompReportActive = activeItem === "comprehensive-report" || activeItem.startsWith("comp-");
+  const showSubNav = flowType === "comprehensive" && compStatus === "ready" && isCompReportActive;
+
+  return (
+    <ul className="space-y-1">
+      {items.map((item) => {
+        const isActive = item.id === "comprehensive-report" 
+          ? isCompReportActive 
+          : activeItem === item.id;
+        const badge = "badge" in item ? (item as any).badge : undefined;
+        return (
+          <li key={item.id}>
+            <button
+              onClick={() => { onNavigate(item.id === "comprehensive-report" ? "comprehensive-report" : item.id); onItemClick?.(); }}
+              className={`
+                w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
+                transition-all duration-200
+                ${isActive
+                  ? "bg-primary/8 text-foreground font-semibold shadow-[inset_0_1px_2px_rgba(4,219,127,0.08)]"
+                  : "text-muted-foreground font-medium hover:bg-secondary/60 hover:text-foreground"
+                }
+              `}
+            >
+              <item.icon
+                className={`h-[18px] w-[18px] shrink-0 ${isActive ? "text-primary" : ""}`}
+                strokeWidth={isActive ? 2 : 1.5}
+              />
+              <span className="flex-1 text-left">{item.label}</span>
+              {badge && (
+                <Badge variant="outline" className="text-[8px] font-medium px-1.5 py-0 bg-primary/10 text-primary border-primary/20">
+                  {badge}
+                </Badge>
+              )}
+            </button>
+            {/* Sub-nav for comprehensive report */}
+            {item.id === "comprehensive-report" && showSubNav && (
+              <ul className="ml-6 mt-1 space-y-0.5 border-l border-border/30 pl-3">
+                {compSubNavItems.map((sub) => {
+                  const subActive = activeItem === sub.id;
+                  return (
+                    <li key={sub.id}>
+                      <button
+                        onClick={() => { onNavigate(sub.id); onItemClick?.(); }}
+                        className={`
+                          w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs
+                          transition-all duration-200
+                          ${subActive
+                            ? "text-primary font-semibold bg-primary/5"
+                            : "text-muted-foreground font-medium hover:text-foreground hover:bg-secondary/40"
+                          }
+                        `}
+                      >
+                        <sub.icon className={`h-3.5 w-3.5 shrink-0 ${subActive ? "text-primary" : ""}`} strokeWidth={1.5} />
+                        <span>{sub.label}</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
             )}
-          </button>
-        </li>
-      );
-    })}
-  </ul>
-);
+          </li>
+        );
+      })}
+    </ul>
+  );
+};
 
 const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, riskScore = 82, onRiskScoreChange, flowType = "normal", compStatus }: DashboardSidebarProps) => {
   const isMobile = useIsMobile();
@@ -208,7 +256,7 @@ const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, r
             </div>
             <nav className="flex-1 px-3 py-2">
               <p className="text-caps px-3 mb-3">Menu</p>
-              <NavList activeItem={activeItem} onNavigate={onNavigate} onItemClick={onMobileClose} items={getMenuItems(flowType, compStatus)} />
+              <NavList activeItem={activeItem} onNavigate={onNavigate} onItemClick={onMobileClose} items={getMenuItems(flowType, compStatus)} flowType={flowType} compStatus={compStatus} />
             </nav>
             {onRiskScoreChange && <RiskScoreControl score={riskScore} onChange={onRiskScoreChange} />}
             <ProfileRow />
@@ -225,7 +273,7 @@ const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, r
       </div>
       <nav className="flex-1 px-3 py-4">
         <p className="text-caps px-3 mb-3">Menu</p>
-        <NavList activeItem={activeItem} onNavigate={onNavigate} items={getMenuItems(flowType, compStatus)} />
+        <NavList activeItem={activeItem} onNavigate={onNavigate} items={getMenuItems(flowType, compStatus)} flowType={flowType} compStatus={compStatus} />
       </nav>
       {onRiskScoreChange && <RiskScoreControl score={riskScore} onChange={onRiskScoreChange} />}
       <ProfileRow />

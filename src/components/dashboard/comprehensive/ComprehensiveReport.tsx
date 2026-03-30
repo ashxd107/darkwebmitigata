@@ -1,34 +1,30 @@
-import { useState } from "react";
-import ComprehensiveSubNav from "./ComprehensiveSubNav";
-import PersonalInfoSection from "./PersonalInfoSection";
 import DocumentsSection from "./DocumentsSection";
 import CompLeakSources from "./CompLeakSources";
 import PasswordsSection from "./PasswordsSection";
 import TimelineSection from "./TimelineSection";
 
-const ComprehensiveReport = () => {
-  const [activeSection, setActiveSection] = useState("personal-info");
+interface ComprehensiveReportProps {
+  activeSection?: string;
+}
 
+const ComprehensiveReport = ({ activeSection = "comp-documents" }: ComprehensiveReportProps) => {
   const renderSection = () => {
     switch (activeSection) {
-      case "personal-info":
-        return <PersonalInfoSection />;
-      case "documents":
+      case "comp-documents":
         return <DocumentsSection />;
       case "comp-leak-sources":
         return <CompLeakSources />;
-      case "passwords":
+      case "comp-passwords":
         return <PasswordsSection />;
-      case "timeline":
+      case "comp-timeline":
         return <TimelineSection />;
       default:
-        return <PersonalInfoSection />;
+        return <DocumentsSection />;
     }
   };
 
   return (
     <div className="py-4 lg:py-6">
-      <ComprehensiveSubNav activeSection={activeSection} onNavigate={setActiveSection} />
       {renderSection()}
     </div>
   );
