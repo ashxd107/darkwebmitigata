@@ -216,7 +216,7 @@ const NavList = ({ activeItem, onNavigate, onItemClick }: {
   );
 };
 
-const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, riskScore = 82, onRiskScoreChange, isUnlocked }: DashboardSidebarProps) => {
+const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, riskScore = 82, onRiskScoreChange }: DashboardSidebarProps) => {
   const isMobile = useIsMobile();
 
   if (isMobile) {
