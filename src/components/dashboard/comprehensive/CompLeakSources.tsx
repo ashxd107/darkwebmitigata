@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Lock, ArrowRight } from "lucide-react";
+import { Lock } from "lucide-react";
 
 interface LeakField {
   label: string;

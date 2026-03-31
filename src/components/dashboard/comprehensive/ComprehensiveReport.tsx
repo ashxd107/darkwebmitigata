@@ -20,6 +20,8 @@ const ComprehensiveReport = ({ activeSection = "comp-documents", isUnlocked = tr
         return <CompLeakSources isUnlocked={isUnlocked} />;
       case "comp-passwords":
         return <PasswordsSection isUnlocked={isUnlocked} />;
+      case "comp-personal-info":
+        return <PersonalInfoSection />;
       case "comp-timeline":
         return <TimelineSection />;
       default:

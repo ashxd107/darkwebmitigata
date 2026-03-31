@@ -150,11 +150,10 @@ const ProfileRow = () => {
   );
 };
 
-const NavList = ({ activeItem, onNavigate, onItemClick, isUnlocked }: {
+const NavList = ({ activeItem, onNavigate, onItemClick }: {
   activeItem: string;
   onNavigate: (id: string) => void;
   onItemClick?: () => void;
-  isUnlocked?: boolean;
 }) => {
   const isCompReportActive = activeItem === "comprehensive-report" || activeItem.startsWith("comp-");
   const showSubNav = isCompReportActive;
