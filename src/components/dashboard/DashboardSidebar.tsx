@@ -1,4 +1,4 @@
-import { Eye, Database, Lightbulb, LayoutDashboard, X, PhoneCall, MoreHorizontal, LogOut, UserRound, FileSearch, FileText, Key, Clock } from "lucide-react";
+import { Eye, Lightbulb, LayoutDashboard, X, PhoneCall, MoreHorizontal, LogOut, UserRound, FileSearch, FileText, Database, Key, Clock, ShieldCheck } from "lucide-react";
 import mitigataLogo from "@/assets/mitigata-logo.png";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -8,15 +8,15 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
-import type { FlowType, ComprehensiveStatus } from "@/types/flow";
+import type { FlowType } from "@/types/flow";
 
-const baseMenuItems = [
+const menuItems = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
-  { id: "leak-sources", label: "Leak Sources", icon: Database },
   { id: "exposure", label: "Exposure", icon: Eye },
+  { id: "comprehensive-report", label: "Comprehensive Report", icon: FileSearch },
   { id: "recommendations", label: "Recommendations", icon: Lightbulb },
   { id: "call-assistance", label: "Call Assistance", icon: PhoneCall },
+  { id: "insurance", label: "Insurance", icon: ShieldCheck },
 ];
 
 const compSubNavItems = [
@@ -25,21 +25,6 @@ const compSubNavItems = [
   { id: "comp-passwords", label: "Passwords", icon: Key },
   { id: "comp-timeline", label: "Timeline", icon: Clock },
 ];
-
-const getMenuItems = (flowType: FlowType, compStatus?: ComprehensiveStatus) => {
-  if (flowType === "comprehensive") {
-    const compItem = {
-      id: "comprehensive-report",
-      label: "Comprehensive Report",
-      icon: FileSearch,
-      badge: compStatus === "pending" ? "In Progress" : compStatus === "ready" ? "Ready" : undefined,
-    };
-    // Remove leak-sources from main nav for comprehensive flow
-    const filtered = baseMenuItems.filter(item => item.id !== "leak-sources");
-    return [filtered[0], compItem, ...filtered.slice(1)];
-  }
-  return baseMenuItems;
-};
 
 const userData = {
   name: "Rahul Sharma",
@@ -56,7 +41,7 @@ interface DashboardSidebarProps {
   riskScore?: number;
   onRiskScoreChange?: (score: number) => void;
   flowType?: FlowType;
-  compStatus?: ComprehensiveStatus;
+  isUnlocked?: boolean;
 }
 
 const RiskScoreControl = ({ score, onChange }: { score: number; onChange: (v: number) => void }) => (
@@ -165,24 +150,21 @@ const ProfileRow = () => {
   );
 };
 
-const NavList = ({ activeItem, onNavigate, onItemClick, items, flowType, compStatus }: { 
-  activeItem: string; 
-  onNavigate: (id: string) => void; 
-  onItemClick?: () => void; 
-  items: ReturnType<typeof getMenuItems>;
-  flowType?: FlowType;
-  compStatus?: ComprehensiveStatus;
+const NavList = ({ activeItem, onNavigate, onItemClick, isUnlocked }: {
+  activeItem: string;
+  onNavigate: (id: string) => void;
+  onItemClick?: () => void;
+  isUnlocked?: boolean;
 }) => {
   const isCompReportActive = activeItem === "comprehensive-report" || activeItem.startsWith("comp-");
-  const showSubNav = flowType === "comprehensive" && compStatus === "ready" && isCompReportActive;
+  const showSubNav = isCompReportActive;
 
   return (
     <ul className="space-y-1">
-      {items.map((item) => {
-        const isActive = item.id === "comprehensive-report" 
-          ? isCompReportActive 
+      {menuItems.map((item) => {
+        const isActive = item.id === "comprehensive-report"
+          ? isCompReportActive
           : activeItem === item.id;
-        const badge = "badge" in item ? (item as any).badge : undefined;
         return (
           <li key={item.id}>
             <button
@@ -201,11 +183,6 @@ const NavList = ({ activeItem, onNavigate, onItemClick, items, flowType, compSta
                 strokeWidth={isActive ? 2 : 1.5}
               />
               <span className="flex-1 text-left">{item.label}</span>
-              {badge && (
-                <Badge variant="outline" className="text-[8px] font-medium px-1.5 py-0 bg-primary/10 text-primary border-primary/20">
-                  {badge}
-                </Badge>
-              )}
             </button>
             {/* Sub-nav for comprehensive report */}
             {item.id === "comprehensive-report" && showSubNav && (
@@ -240,7 +217,7 @@ const NavList = ({ activeItem, onNavigate, onItemClick, items, flowType, compSta
   );
 };
 
-const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, riskScore = 82, onRiskScoreChange, flowType = "normal", compStatus }: DashboardSidebarProps) => {
+const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, riskScore = 82, onRiskScoreChange, isUnlocked }: DashboardSidebarProps) => {
   const isMobile = useIsMobile();
 
   if (isMobile) {
@@ -256,7 +233,7 @@ const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, r
             </div>
             <nav className="flex-1 px-3 py-2">
               <p className="text-caps px-3 mb-3">Menu</p>
-              <NavList activeItem={activeItem} onNavigate={onNavigate} onItemClick={onMobileClose} items={getMenuItems(flowType, compStatus)} flowType={flowType} compStatus={compStatus} />
+              <NavList activeItem={activeItem} onNavigate={onNavigate} onItemClick={onMobileClose} isUnlocked={isUnlocked} />
             </nav>
             {onRiskScoreChange && <RiskScoreControl score={riskScore} onChange={onRiskScoreChange} />}
             <ProfileRow />
@@ -273,7 +250,7 @@ const DashboardSidebar = ({ activeItem, onNavigate, mobileOpen, onMobileClose, r
       </div>
       <nav className="flex-1 px-3 py-4">
         <p className="text-caps px-3 mb-3">Menu</p>
-        <NavList activeItem={activeItem} onNavigate={onNavigate} items={getMenuItems(flowType, compStatus)} flowType={flowType} compStatus={compStatus} />
+        <NavList activeItem={activeItem} onNavigate={onNavigate} isUnlocked={isUnlocked} />
       </nav>
       {onRiskScoreChange && <RiskScoreControl score={riskScore} onChange={onRiskScoreChange} />}
       <ProfileRow />

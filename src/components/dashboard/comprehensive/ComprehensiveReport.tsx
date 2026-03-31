@@ -1,3 +1,4 @@
+import PersonalInfoSection from "./PersonalInfoSection";
 import DocumentsSection from "./DocumentsSection";
 import CompLeakSources from "./CompLeakSources";
 import PasswordsSection from "./PasswordsSection";
@@ -5,17 +6,20 @@ import TimelineSection from "./TimelineSection";
 
 interface ComprehensiveReportProps {
   activeSection?: string;
+  isUnlocked?: boolean;
 }
 
-const ComprehensiveReport = ({ activeSection = "comp-documents" }: ComprehensiveReportProps) => {
+const ComprehensiveReport = ({ activeSection = "comp-documents", isUnlocked = true }: ComprehensiveReportProps) => {
   const renderSection = () => {
     switch (activeSection) {
+      case "comp-personal-info":
+        return <PersonalInfoSection />;
       case "comp-documents":
         return <DocumentsSection />;
       case "comp-leak-sources":
-        return <CompLeakSources />;
+        return <CompLeakSources isUnlocked={isUnlocked} />;
       case "comp-passwords":
-        return <PasswordsSection />;
+        return <PasswordsSection isUnlocked={isUnlocked} />;
       case "comp-timeline":
         return <TimelineSection />;
       default:

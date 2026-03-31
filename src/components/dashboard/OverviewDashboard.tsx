@@ -2,13 +2,14 @@ import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import {
   ArrowRight, AlertTriangle, Key, Database, ShieldX,
-  ShieldCheck, CreditCard, ShieldAlert, CheckCircle2, Lock,
+  ShieldCheck, ShieldAlert, CheckCircle2, Lock, Eye,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import RiskScoreMeter from "./RiskScoreMeter";
 import ExposureBreakdownChart from "./ExposureBreakdownChart";
 import { getRiskContent, emptyStates } from "@/lib/riskContent";
 import LockedOverlay from "./LockedOverlay";
+import type { FlowType } from "@/types/flow";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 10 },
@@ -26,6 +27,7 @@ interface OverviewDashboardProps {
   riskScore?: number;
   isUnlocked?: boolean;
   onUnlock?: () => void;
+  flowType?: FlowType;
 }
 
 const EXPOSURE_COUNT = 24;
@@ -43,7 +45,7 @@ const topLeaks = [
 const recommendations = [
   { icon: Key, label: "Change compromised passwords" },
   { icon: ShieldCheck, label: "Enable two-factor authentication" },
-  { icon: CreditCard, label: "Monitor financial activity" },
+  { icon: Eye, label: "Monitor financial activity" },
 ];
 
 const riskBadge: Record<string, string> = {
@@ -61,7 +63,7 @@ const EmptyState = ({ message, icon: Icon }: { message: string; icon: React.Elem
   </div>
 );
 
-const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE = 82, isUnlocked = false, onUnlock }: OverviewDashboardProps) => {
+const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE = 82, isUnlocked = false, onUnlock, flowType = "free" }: OverviewDashboardProps) => {
   const riskContent = getRiskContent(RISK_SCORE);
   const hasExposures = EXPOSURE_COUNT > 0;
 
@@ -111,7 +113,7 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
                 <Lock className="h-6 w-6 mb-3 text-primary" strokeWidth={1.5} />
                 <h3 className="text-sm font-semibold mb-1">Unlock full report</h3>
                 <p className="text-xs opacity-60 mb-4 leading-relaxed">
-                  See complete leak details, breach source records, and recommended actions.
+                  See complete leak details, identity document exposure, breach source records, and recommended actions.
                 </p>
                 <Button
                   onClick={onUnlock}
@@ -122,6 +124,22 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
                   <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                 </Button>
                 <p className="text-[10px] opacity-40 mt-2">One-time payment to access the full report</p>
+              </>
+            ) : flowType === "policy" ? (
+              <>
+                <ShieldCheck className="h-6 w-6 mb-3 text-primary" strokeWidth={1.5} />
+                <h3 className="text-sm font-semibold mb-1">Comprehensive access active</h3>
+                <p className="text-xs opacity-60 mb-4 leading-relaxed">
+                  Your plan includes full identity, document, and breach intelligence reporting.
+                </p>
+                <Button
+                  onClick={() => onNavigate("insurance")}
+                  size="sm"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg px-4 w-fit font-semibold text-xs"
+                >
+                  View Coverage
+                  <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                </Button>
               </>
             ) : (
               <>
@@ -171,7 +189,7 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
       {/* ROW 3: Locked grid for free users, full for unlocked */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 lg:gap-5 relative">
         {!isUnlocked && onUnlock && <LockedOverlay onUnlock={onUnlock} compact />}
-        
+
         <motion.div variants={fadeIn} className="md:col-span-1 lg:col-span-4">
           <ExposureBreakdownChart />
         </motion.div>
@@ -181,7 +199,7 @@ const OverviewDashboard = ({ onInsuranceClick, onNavigate, riskScore: RISK_SCORE
             <div className="flex items-center justify-between mb-1">
               <h3 className="text-display text-sm">Top Risk Sources</h3>
               <button
-                onClick={() => onNavigate("leak-sources")}
+                onClick={() => onNavigate("comprehensive-report")}
                 className="text-[11px] text-muted-foreground hover:text-foreground transition-colors font-medium"
               >
                 View all →

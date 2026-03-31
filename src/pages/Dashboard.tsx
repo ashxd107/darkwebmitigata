@@ -4,22 +4,20 @@ import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import MobileHeader from "@/components/dashboard/MobileHeader";
 import OverviewDashboard from "@/components/dashboard/OverviewDashboard";
 import ExposureSection from "@/components/dashboard/ExposureSection";
-import LeakSources from "@/components/dashboard/LeakSources";
 import Recommendations from "@/components/dashboard/Recommendations";
-import InsurancePage from "@/components/dashboard/InsurancePage";
 import CallAssistance from "@/components/dashboard/CallAssistance";
+import InsurancePage from "@/components/dashboard/InsurancePage";
 import StickyCTA from "@/components/dashboard/StickyCTA";
 import InsuranceFlow from "@/components/dashboard/InsuranceFlow";
 import InsuranceSuccess from "@/components/dashboard/InsuranceSuccess";
 import LockedOverlay from "@/components/dashboard/LockedOverlay";
 import UnlockPaymentModal from "@/components/dashboard/UnlockPaymentModal";
-import ComprehensivePending from "@/components/dashboard/comprehensive/ComprehensivePending";
 import ComprehensiveReport from "@/components/dashboard/comprehensive/ComprehensiveReport";
-import type { FlowType, ComprehensiveStatus } from "@/types/flow";
+import type { FlowType } from "@/types/flow";
 
 const Dashboard = () => {
   const { flow } = useParams<{ flow: string }>();
-  const flowType: FlowType = (flow === "basic" || flow === "comprehensive") ? flow : "normal";
+  const flowType: FlowType = flow === "policy" ? "policy" : "free";
 
   const [activeItem, setActiveItem] = useState("overview");
   const [insuranceOpen, setInsuranceOpen] = useState(false);
@@ -28,14 +26,11 @@ const Dashboard = () => {
   const [insuranceSuccess, setInsuranceSuccess] = useState(false);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
 
-  // Normal flow: unlock state. Basic and comprehensive users get full access.
-  const [isUnlocked, setIsUnlocked] = useState(flowType === "basic" || flowType === "comprehensive");
-
-  // Comprehensive flow: report status
-  const [compStatus, setCompStatus] = useState<ComprehensiveStatus>("pending");
+  // Policy users get full access. Free users must pay to unlock.
+  const [isUnlocked, setIsUnlocked] = useState(flowType === "policy");
 
   const handleUnlock = () => {
-    if (flowType === "normal") {
+    if (!isUnlocked) {
       setPaymentModalOpen(true);
     }
   };
@@ -61,16 +56,17 @@ const Dashboard = () => {
     }
 
     // Comprehensive report sections (main or sub-nav items)
-    if (flowType === "comprehensive" && (activeItem === "comprehensive-report" || activeItem.startsWith("comp-"))) {
-      if (compStatus === "pending") {
+    if (activeItem === "comprehensive-report" || activeItem.startsWith("comp-")) {
+      if (!isUnlocked) {
+        // Free user: show locked comprehensive report with limited preview
         return (
-          <ComprehensivePending
-            onGoToDashboard={() => setActiveItem("overview")}
-            onSimulateReady={() => setCompStatus("ready")}
-          />
+          <div className="py-4 lg:py-8 relative">
+            <LockedOverlay onUnlock={handleUnlock} />
+            <ComprehensiveReport activeSection={activeItem === "comprehensive-report" ? "comp-documents" : activeItem} isUnlocked={false} />
+          </div>
         );
       }
-      return <ComprehensiveReport activeSection={activeItem === "comprehensive-report" ? "comp-documents" : activeItem} />;
+      return <ComprehensiveReport activeSection={activeItem === "comprehensive-report" ? "comp-documents" : activeItem} isUnlocked={true} />;
     }
 
     switch (activeItem) {
@@ -82,6 +78,7 @@ const Dashboard = () => {
             riskScore={riskScore}
             isUnlocked={isUnlocked}
             onUnlock={handleUnlock}
+            flowType={flowType}
           />
         );
       case "exposure":
@@ -90,16 +87,10 @@ const Dashboard = () => {
             <ExposureSection isUnlocked={isUnlocked} onUnlock={handleUnlock} />
           </div>
         );
-      case "leak-sources":
-        return (
-          <div className="py-4 lg:py-8">
-            <LeakSources isUnlocked={isUnlocked} onUnlock={handleUnlock} />
-          </div>
-        );
       case "recommendations":
         return (
           <div className="py-4 lg:py-8 relative">
-            {!isUnlocked && flowType === "normal" && <LockedOverlay onUnlock={handleUnlock} />}
+            {!isUnlocked && <LockedOverlay onUnlock={handleUnlock} />}
             <Recommendations />
           </div>
         );
@@ -128,7 +119,7 @@ const Dashboard = () => {
         riskScore={riskScore}
         onRiskScoreChange={setRiskScore}
         flowType={flowType}
-        compStatus={flowType === "comprehensive" ? compStatus : undefined}
+        isUnlocked={isUnlocked}
       />
 
       <main className="pt-16 lg:pt-0 lg:ml-[260px] px-4 sm:px-6 lg:px-8 xl:px-12 py-4 pb-24 max-w-[1200px]">
@@ -139,7 +130,7 @@ const Dashboard = () => {
         <StickyCTA onClick={() => setInsuranceOpen(true)} />
       )}
       <InsuranceFlow open={insuranceOpen} onClose={() => setInsuranceOpen(false)} onSuccess={handleInsuranceComplete} />
-      {flowType === "normal" && (
+      {!isUnlocked && (
         <UnlockPaymentModal open={paymentModalOpen} onClose={() => setPaymentModalOpen(false)} onSuccess={handlePaymentSuccess} />
       )}
     </div>
