@@ -1,36 +1,27 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Shield, ShieldCheck, FileSearch, ArrowRight } from "lucide-react";
+import { Shield, ShieldCheck, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import mitigataLogo from "@/assets/mitigata-logo.png";
 
 const flows = [
   {
-    id: "normal",
-    title: "Normal User",
+    id: "free",
+    title: "Free User",
     subtitle: "Unlock for ₹49",
-    description: "Free preview with limited data. Pay ₹49 to unlock the full data leak report with all breach sources and recommendations.",
+    description: "See a limited preview of your exposure report. Pay ₹49 to unlock the full comprehensive data leak report with all breach sources and recommendations.",
     icon: Shield,
-    route: "/dashboard/normal",
+    route: "/dashboard/free",
     badge: "Free Preview",
   },
   {
-    id: "basic",
-    title: "Cyber Insurance User",
-    subtitle: "Basic Plan",
-    description: "Full access to the standard data leak report. No payment required — included with your basic cyber insurance plan.",
+    id: "policy",
+    title: "User with Cyber Policy",
+    subtitle: "Full Comprehensive Access",
+    description: "Your cyber insurance plan includes complete access to the comprehensive intelligence-grade exposure report. No payment required.",
     icon: ShieldCheck,
-    route: "/dashboard/basic",
+    route: "/dashboard/policy",
     badge: "Full Access",
-  },
-  {
-    id: "comprehensive",
-    title: "Cyber Insurance User",
-    subtitle: "Comprehensive Plan",
-    description: "Deep intelligence-grade exposure report with document analysis, password intelligence, and breach timeline. Report takes 8 hours to prepare.",
-    icon: FileSearch,
-    route: "/dashboard/comprehensive",
-    badge: "Intelligence Report",
   },
 ];
 
@@ -50,13 +41,13 @@ const FlowSelector = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="border-b border-border/20 bg-card/80 backdrop-blur-md">
-        <div className="max-w-4xl mx-auto px-6 py-5 flex items-center gap-3">
+        <div className="max-w-3xl mx-auto px-6 py-5 flex items-center gap-3">
           <img src={mitigataLogo} alt="Mitigata" className="h-8 w-auto" />
         </div>
       </header>
 
       <main className="flex-1 flex items-center justify-center px-4 py-12">
-        <motion.div variants={stagger} initial="hidden" animate="visible" className="max-w-4xl w-full">
+        <motion.div variants={stagger} initial="hidden" animate="visible" className="max-w-3xl w-full">
           <motion.div variants={fadeIn} className="text-center mb-10">
             <p className="text-caps mb-2">Select Experience</p>
             <h1 className="text-display text-2xl lg:text-3xl mb-2">Choose your report flow</h1>
@@ -65,7 +56,7 @@ const FlowSelector = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {flows.map((flow) => (
               <motion.div
                 key={flow.id}

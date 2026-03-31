@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { User, Globe, Monitor, Lock } from "lucide-react";
+import { User, Globe, Monitor, Lock, FileText } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -31,6 +31,17 @@ const categories = [
     ],
   },
   {
+    id: "gov-ids",
+    title: "Government IDs",
+    description: "Identity documents such as Aadhaar, PAN, or passport found in exposure records.",
+    icon: FileText,
+    items: [
+      { service: "Aadhaar Card", detail: "found — XXXX XXXX 6042", locked: true },
+      { service: "PAN Card", detail: "found — ABCDE12XXF", locked: true },
+      { service: "Passport", detail: "reference detected in one source", locked: true },
+    ],
+  },
+  {
     id: "device-session",
     title: "Device & Session Data",
     description: "IP, browser sessions, cookies, and device-related metadata found in exposure logs.",
@@ -59,11 +70,11 @@ const ExposureSection = ({ isUnlocked = false, onUnlock }: ExposureSectionProps)
       <p className="text-caps mb-2">Exposure</p>
       <h2 className="text-display text-2xl mb-1.5">What was found exposed</h2>
       <p className="text-body text-sm mb-6">
-        This section summarizes the types of data found in your scan. For exact leak events, see Leak Sources.
+        This section summarizes the types of data found in your scan. For exact leak events, see the Comprehensive Report.
       </p>
 
       <div className="card-surface !p-0 overflow-hidden">
-        <Accordion type="multiple" defaultValue={["credentials", "personal", "device-session"]}>
+        <Accordion type="multiple" defaultValue={["credentials", "personal", "gov-ids", "device-session"]}>
           {categories.map((cat) => (
             <AccordionItem key={cat.id} value={cat.id} className="border-border/30 last:border-b-0">
               <AccordionTrigger className="px-6 py-5 hover:no-underline hover:bg-secondary/30">
