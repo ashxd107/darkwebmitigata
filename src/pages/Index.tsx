@@ -42,7 +42,7 @@ const Index = () => {
     if (activeItem === "insurance-success" && insuranceSuccess) {
       return (
         <div className="py-4 lg:py-8">
-          <InsuranceSuccess onGoToDashboard={() => { setActiveItem("overview"); setInsuranceSuccess(false); }} />
+          <InsuranceSuccess open={insuranceSuccess} onClose={() => { setActiveItem("overview"); setInsuranceSuccess(false); }} />
         </div>
       );
     }

@@ -43,17 +43,9 @@ const Dashboard = () => {
   const handleInsuranceComplete = () => {
     setInsuranceOpen(false);
     setInsuranceSuccess(true);
-    setActiveItem("insurance-success");
   };
 
   const renderContent = () => {
-    if (activeItem === "insurance-success" && insuranceSuccess) {
-      return (
-        <div className="py-4 lg:py-8">
-          <InsuranceSuccess onGoToDashboard={() => { setActiveItem("overview"); setInsuranceSuccess(false); }} />
-        </div>
-      );
-    }
 
     // Comprehensive report sections (main or sub-nav items)
     if (activeItem === "comprehensive-report" || activeItem.startsWith("comp-")) {
@@ -133,6 +125,7 @@ const Dashboard = () => {
       {!isUnlocked && (
         <UnlockPaymentModal open={paymentModalOpen} onClose={() => setPaymentModalOpen(false)} onSuccess={handlePaymentSuccess} />
       )}
+      <InsuranceSuccess open={insuranceSuccess} onClose={() => setInsuranceSuccess(false)} />
     </div>
   );
 };
