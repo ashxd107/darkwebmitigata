@@ -125,6 +125,7 @@ const Dashboard = () => {
       {!isUnlocked && (
         <UnlockPaymentModal open={paymentModalOpen} onClose={() => setPaymentModalOpen(false)} onSuccess={handlePaymentSuccess} />
       )}
+      <InsuranceSuccess open={insuranceSuccess} onClose={() => setInsuranceSuccess(false)} />
     </div>
   );
 };
