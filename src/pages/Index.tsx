@@ -2,6 +2,7 @@ import { useState } from "react";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import MobileHeader from "@/components/dashboard/MobileHeader";
 import OverviewDashboard from "@/components/dashboard/OverviewDashboard";
+import CleanReportOverview from "@/components/dashboard/CleanReportOverview";
 import ExposureSection from "@/components/dashboard/ExposureSection";
 import LeakSources from "@/components/dashboard/LeakSources";
 import Recommendations from "@/components/dashboard/Recommendations";
@@ -49,17 +50,23 @@ const Index = () => {
 
     switch (activeItem) {
       case "overview":
-        return (
-          <>
-            <OverviewDashboard
-              onInsuranceClick={() => setInsuranceOpen(true)}
-              onNavigate={setActiveItem}
-              riskScore={riskScore}
+        if (riskScore === 0) {
+          return (
+            <CleanReportOverview
               isUnlocked={isUnlocked}
               onUnlock={handleUnlock}
+              onNavigate={setActiveItem}
             />
-            
-          </>
+          );
+        }
+        return (
+          <OverviewDashboard
+            onInsuranceClick={() => setInsuranceOpen(true)}
+            onNavigate={setActiveItem}
+            riskScore={riskScore}
+            isUnlocked={isUnlocked}
+            onUnlock={handleUnlock}
+          />
         );
       case "exposure":
         return (

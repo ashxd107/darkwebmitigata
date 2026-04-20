@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import MobileHeader from "@/components/dashboard/MobileHeader";
 import OverviewDashboard from "@/components/dashboard/OverviewDashboard";
+import CleanReportOverview from "@/components/dashboard/CleanReportOverview";
 import ExposureSection from "@/components/dashboard/ExposureSection";
 import Recommendations from "@/components/dashboard/Recommendations";
 import CallAssistance from "@/components/dashboard/CallAssistance";
@@ -63,6 +64,16 @@ const Dashboard = () => {
 
     switch (activeItem) {
       case "overview":
+        if (riskScore === 0) {
+          return (
+            <CleanReportOverview
+              flowType={flowType}
+              isUnlocked={isUnlocked}
+              onUnlock={handleUnlock}
+              onNavigate={setActiveItem}
+            />
+          );
+        }
         return (
           <OverviewDashboard
             onInsuranceClick={() => setInsuranceOpen(true)}
