@@ -239,27 +239,106 @@ const CleanReportOverview = ({
         </motion.div>
       )}
 
-      {/* Policy users — gentle next step */}
+      {/* Policy users — comprehensive monitoring view */}
       {flowType === "policy" && (
         <motion.div
           variants={fadeIn}
-          className="card-surface !p-5 flex items-center justify-between gap-4"
+          className="card-surface !p-0 overflow-hidden"
+          style={{
+            background:
+              "linear-gradient(180deg, hsl(var(--primary) / 0.04) 0%, hsl(var(--card)) 35%)",
+          }}
         >
-          <div>
-            <h3 className="text-display text-sm">Comprehensive monitoring active</h3>
-            <p className="text-body text-xs mt-1">
-              We continuously monitor 8 additional sources. You'll be notified if anything changes.
-            </p>
+          {/* Header */}
+          <div className="flex items-start justify-between gap-4 px-5 lg:px-6 py-5 border-b border-primary/10">
+            <div className="min-w-0">
+              <span className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-semibold tracking-[0.12em] uppercase">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 animate-ping" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
+                </span>
+                Comprehensive monitoring active
+              </span>
+              <h2 className="text-display text-xl lg:text-2xl leading-tight mt-2.5">
+                8 deeper sources are being monitored.
+              </h2>
+              <p className="text-body text-sm mt-1.5 max-w-xl">
+                We continuously check the deep web. You'll be notified if anything changes.
+              </p>
+            </div>
+            <div className="shrink-0 text-right rounded-xl border border-primary/30 bg-primary/5 px-3.5 py-2.5">
+              <p className="text-display text-xl leading-none text-primary">
+                8<span className="text-primary/60 text-sm">/8</span>
+              </p>
+              <p className="text-caps text-[9px] mt-1 text-primary/70">Monitored</p>
+            </div>
           </div>
-          <Button
-            onClick={() => onNavigate?.("comprehensive-report")}
-            variant="outline"
-            size="sm"
-            className="rounded-full shrink-0"
-          >
-            View report
-            <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-          </Button>
+
+          {/* Stat tiles */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 px-5 lg:px-6 py-4 border-b border-border/40">
+            {[
+              { stat: "10 / 10", label: "layers monitored" },
+              { stat: "0", label: "matches found" },
+              { stat: "24/7", label: "live monitoring" },
+            ].map((tile) => (
+              <div
+                key={tile.label}
+                className="rounded-xl border border-border/40 bg-secondary/20 px-4 py-3"
+              >
+                <p className="text-display text-lg leading-none">{tile.stat}</p>
+                <p className="text-body text-[11px] mt-1.5">{tile.label}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Monitored source grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 px-5 lg:px-6 py-5">
+            {lockedSources.map((src) => {
+              const Icon = src.icon;
+              return (
+                <div
+                  key={src.title}
+                  className="group rounded-xl border border-border/40 bg-card p-3.5 transition-colors hover:border-border/70"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="h-8 w-8 rounded-lg border border-border/50 bg-secondary/40 flex items-center justify-center">
+                      <Icon className="h-4 w-4 text-foreground/70" strokeWidth={1.75} />
+                    </div>
+                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 text-[9px] font-medium">
+                      <Check className="h-2.5 w-2.5" strokeWidth={3} />
+                      Clear
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <h4 className="text-display text-[13px] truncate">{src.title}</h4>
+                  </div>
+                  <p className="text-body text-[11px] leading-snug line-clamp-1">{src.description}</p>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Supporting line */}
+          <div className="px-5 lg:px-6 pb-4">
+            <p className="text-body text-[11px]">Includes 3 family members.</p>
+          </div>
+
+          {/* Bottom CTA bar */}
+          <div className="bg-foreground text-card px-5 lg:px-6 py-5 flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6">
+            <div className="flex-1 min-w-0">
+              <p className="text-display text-sm text-card leading-tight">View full comprehensive report.</p>
+              <p className="text-[11px] opacity-60 mt-0.5">
+                Detailed findings across all 10 layers, including family.
+              </p>
+            </div>
+            <Button
+              onClick={() => onNavigate?.("comprehensive-report")}
+              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-5 h-11 font-semibold text-sm shrink-0 w-full lg:w-auto"
+            >
+              View report
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </Button>
+          </div>
         </motion.div>
       )}
     </motion.div>
