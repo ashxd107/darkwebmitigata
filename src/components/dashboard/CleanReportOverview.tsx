@@ -58,8 +58,8 @@ const lockedSources: { title: string; description: string; severity: Severity; i
 ];
 
 const severityStyles: Record<Severity, string> = {
-  Critical: "bg-destructive/10 text-destructive border-destructive/20",
-  High: "bg-[hsl(var(--risk-mid))]/10 text-[hsl(var(--risk-mid))] border-[hsl(var(--risk-mid))]/20",
+  Critical: "bg-destructive/10 text-destructive border-destructive/30",
+  High: "bg-[hsl(var(--risk-mid))]/10 text-[hsl(var(--risk-mid))] border-[hsl(var(--risk-mid))]/30",
   Medium: "bg-muted text-muted-foreground border-border/40",
 };
 
@@ -131,29 +131,36 @@ const CleanReportOverview = ({
 
       {/* SECTION 2 — DEEPER SCAN CARD (free only) */}
       {showDeeperScan && (
-        <motion.div variants={fadeIn} className="card-surface !p-0 overflow-hidden">
+        <motion.div
+          variants={fadeIn}
+          className="card-surface !p-0 overflow-hidden border-destructive/20"
+          style={{
+            background:
+              "linear-gradient(180deg, hsl(var(--destructive) / 0.04) 0%, hsl(var(--card)) 35%)",
+          }}
+        >
           {/* Header */}
-          <div className="flex items-start justify-between gap-4 px-5 lg:px-6 py-5 border-b border-border/40">
+          <div className="flex items-start justify-between gap-4 px-5 lg:px-6 py-5 border-b border-destructive/10">
             <div className="min-w-0">
-              <span className="inline-flex items-center gap-1.5 text-destructive text-[10px] font-medium tracking-wide uppercase">
+              <span className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-[10px] font-semibold tracking-[0.12em] uppercase">
                 <span className="relative flex h-1.5 w-1.5">
                   <span className="absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75 animate-ping" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-destructive" />
                 </span>
                 8 deeper sources still unchecked
               </span>
-              <h2 className="text-display text-xl lg:text-2xl leading-tight mt-2">
+              <h2 className="text-display text-xl lg:text-2xl leading-tight mt-2.5">
                 8 deeper sources are still unchecked.
               </h2>
               <p className="text-body text-sm mt-1.5 max-w-xl">
                 The free scan checks the surface. The paid scan checks the rest.
               </p>
             </div>
-            <div className="shrink-0 text-right rounded-xl border border-border/40 bg-secondary/30 px-3 py-2">
-              <p className="text-display text-xl leading-none">
-                8<span className="text-muted-foreground text-sm">/8</span>
+            <div className="shrink-0 text-right rounded-xl border border-destructive/30 bg-destructive/5 px-3.5 py-2.5">
+              <p className="text-display text-xl leading-none text-destructive">
+                8<span className="text-destructive/60 text-sm">/8</span>
               </p>
-              <p className="text-caps text-[9px] mt-1">Unchecked</p>
+              <p className="text-caps text-[9px] mt-1 text-destructive/70">Unchecked</p>
             </div>
           </div>
 
@@ -223,7 +230,7 @@ const CleanReportOverview = ({
             </div>
             <Button
               onClick={onUnlock}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-5 h-11 font-semibold text-sm shrink-0 w-full lg:w-auto"
+              className="bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-full px-5 h-11 font-semibold text-sm shrink-0 w-full lg:w-auto shadow-[0_8px_24px_-8px_hsl(var(--destructive)/0.6)]"
             >
               Run deeper scan
               <ArrowRight className="ml-1 h-4 w-4" />
