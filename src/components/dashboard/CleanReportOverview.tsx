@@ -242,10 +242,22 @@ const CleanReportOverview = ({
               {/* Price */}
               <div className="shrink-0">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-display text-card text-[44px] lg:text-[52px] leading-none">₹99</span>
-                  <span className="text-[11px] text-card/60">+ 18% IGST</span>
+                  <span
+                    className="font-semibold tracking-[-0.03em] text-[44px] lg:text-[52px] leading-none"
+                    style={{ color: "hsl(var(--card))" }}
+                  >
+                    ₹99
+                  </span>
+                  <span className="text-[11px]" style={{ color: "hsl(var(--card) / 0.6)" }}>
+                    + 18% IGST
+                  </span>
                 </div>
-                <p className="text-caps mt-2 text-card/55">One-time</p>
+                <p
+                  className="uppercase tracking-[0.12em] font-medium text-[10px] mt-2"
+                  style={{ color: "hsl(var(--card) / 0.55)" }}
+                >
+                  One-time
+                </p>
               </div>
 
               {/* Divider */}
@@ -256,10 +268,13 @@ const CleanReportOverview = ({
                 <p className="text-[10px] uppercase tracking-[0.14em] font-medium text-primary">
                   Comprehensive scan
                 </p>
-                <p className="text-display text-card text-lg lg:text-xl mt-1.5">
+                <p
+                  className="font-semibold tracking-[-0.03em] text-lg lg:text-xl mt-1.5"
+                  style={{ color: "hsl(var(--card))" }}
+                >
                   Check the other 8 layers.
                 </p>
-                <p className="text-[12px] text-card/60 mt-1">
+                <p className="text-[12px] mt-1" style={{ color: "hsl(var(--card) / 0.6)" }}>
                   Under 60 seconds. 3 family members included.
                 </p>
               </div>
