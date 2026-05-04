@@ -208,11 +208,18 @@ const PaymentsView = ({ isPremium, onSelect, onUpgrade }: {
   const locked = isPremium ? [] : list.slice(1);
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-[18px]">
-        <StatCard label="Monthly total" value="₹3,553" meta={<><span className="text-primary font-semibold">+₹179</span> vs last month</>} />
-        <StatCard label="Upcoming 7 days" value="₹1,198" meta="4 payments · Adobe debits tomorrow" />
-        <StatCard label="Price changes" value="+₹70" accent="warn" badge="2" meta="Netflix +₹50, Spotify +₹20" />
+    <div className="space-y-6 max-w-[760px] mx-auto w-full">
+      {/* Centered hero metric */}
+      <HeroMetric
+        label="Monthly total"
+        value="₹3,553"
+        sub={<><span className="text-primary font-semibold">+₹179</span> vs last month</>}
+      />
+
+      {/* Two secondary cards side by side */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-[18px]">
+        <SecondaryCard label="Upcoming 7 days" value="₹1,198" meta="4 payments · Adobe debits tomorrow" />
+        <SecondaryCard label="Price changes" value="+₹70" accent="warn" badge="2" meta="Netflix +₹50, Spotify +₹20" />
       </div>
 
       <div className="bg-card rounded-[20px] border border-border/30 shadow-[0_1px_2px_rgba(0,0,0,0.03),0_8px_24px_rgba(0,0,0,0.02)] overflow-hidden">
