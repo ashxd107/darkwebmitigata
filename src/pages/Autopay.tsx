@@ -147,9 +147,24 @@ const Topbar = ({
   );
 };
 
-/* ============== Stat card ============== */
+/* ============== Cards: Hero + Secondary ============== */
 
-const StatCard = ({
+const HeroMetric = ({
+  label, value, sub, accent,
+}: { label: string; value: string; sub: React.ReactNode; accent?: "default" | "savings" }) => {
+  const valueColor = accent === "savings" ? "text-primary" : "text-foreground";
+  return (
+    <div className="text-center py-10 md:py-14">
+      <div className="text-sm text-muted-foreground font-medium mb-4">{label}</div>
+      <div className={`text-display text-[64px] md:text-[88px] leading-none tabular-nums ${valueColor}`}>
+        {value}
+      </div>
+      <div className="text-sm text-muted-foreground font-medium mt-4">{sub}</div>
+    </div>
+  );
+};
+
+const SecondaryCard = ({
   label, value, suffix, meta, accent, badge,
 }: { label: string; value: string; suffix?: string; meta: React.ReactNode; accent?: "warn" | "savings"; badge?: string }) => {
   const valueColor = accent === "warn" ? "text-[hsl(38,92%,42%)]" : accent === "savings" ? "text-primary" : "text-foreground";
