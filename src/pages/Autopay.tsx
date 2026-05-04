@@ -352,11 +352,16 @@ const InsightsView = () => {
   const active = mandates.filter(m => m.status === "active");
   const inactive = mandates.filter(m => m.status !== "active");
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-[18px]">
-        <StatCard label="Lifetime spent" value="₹47,231" meta="Across 9 services since Sep 2023" />
-        <StatCard label="Yearly commitments" value="₹4,788" suffix="/yr" meta="Disney+ renews Aug 2026" />
-        <StatCard label="Saved by cancelling" value="₹3,096" accent="savings" meta="YouTube + Audible" />
+    <div className="space-y-6 max-w-[760px] mx-auto w-full">
+      <HeroMetric
+        label="Lifetime spent"
+        value="₹47,231"
+        sub="Across 9 services since Sep 2023"
+      />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-[18px]">
+        <SecondaryCard label="Yearly commitments" value="₹4,788" suffix="/yr" meta="Disney+ renews Aug 2026" />
+        <SecondaryCard label="Saved by cancelling" value="₹3,096" accent="savings" meta="YouTube + Audible" />
       </div>
 
       <div className="card-surface !p-6">
