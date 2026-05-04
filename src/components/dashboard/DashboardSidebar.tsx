@@ -1,4 +1,4 @@
-import { Eye, Lightbulb, LayoutDashboard, X, PhoneCall, MoreHorizontal, LogOut, UserRound, FileSearch, FileText, Database, Key, Clock, ShieldCheck } from "lucide-react";
+import { Eye, Lightbulb, LayoutDashboard, X, PhoneCall, MoreHorizontal, LogOut, UserRound, FileSearch, FileText, Database, Key, Clock, ShieldCheck, CreditCard } from "lucide-react";
 import mitigataLogo from "@/assets/mitigata-logo.png";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -17,6 +17,7 @@ const menuItems = [
   { id: "recommendations", label: "Recommendations", icon: Lightbulb },
   { id: "call-assistance", label: "Call Assistance", icon: PhoneCall },
   { id: "insurance", label: "Insurance", icon: ShieldCheck },
+  { id: "autopay", label: "Autopay Tracker", icon: CreditCard },
 ];
 
 const compSubNavItems = [
