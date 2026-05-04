@@ -249,106 +249,71 @@ const PaymentsView = ({ isPremium, onSelect, onUpgrade }: {
           </div>
         </div>
 
-        {/* desktop list */}
-        <div className="hidden md:block relative">
-          <div className="grid grid-cols-[2fr_1fr_1.2fr_auto_36px] gap-4 px-6 py-3.5 bg-secondary/40 border-y border-border/40 text-[11px] tracking-[0.12em] font-semibold text-muted-foreground uppercase">
-            <div>Subscription</div>
-            <div>Next debit</div>
-            <div>Status</div>
-            <div className="text-right">Amount</div>
-            <div></div>
-          </div>
+        {/* Unified card list (no tables — works on web + mobile) */}
+        <div className="relative">
           <div>
             {visible.map((m) => (
-              <div
+              <button
                 key={m.id}
                 onClick={() => onSelect(m)}
-                className="grid grid-cols-[2fr_1fr_1.2fr_auto_36px] gap-4 items-center px-6 py-4 border-b border-border/30 last:border-0 cursor-pointer hover:bg-primary/[0.04] group transition"
+                className="w-full text-left px-5 sm:px-6 py-4 border-b border-border/30 last:border-0 cursor-pointer hover:bg-primary/[0.04] group transition"
               >
+                {/* Top row: logo + name + amount */}
                 <div className="flex items-center gap-3.5">
                   <Logo k={m.logo} />
-                  <div>
-                    <div className="font-semibold text-sm text-foreground">{m.name}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{m.cat}</div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-semibold text-sm text-foreground truncate">{m.name}</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">{m.cycle} · {m.cat}</div>
                   </div>
+                  <div className="text-right">
+                    <div className="text-base font-bold tabular-nums text-foreground">₹{m.amount.toLocaleString("en-IN")}</div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0" strokeWidth={2.5} />
                 </div>
-                <div className="text-sm text-foreground">{m.dateFull}</div>
-                <div className="flex items-center gap-2">
+                {/* Bottom row: date + status/UPI */}
+                <div className="flex items-center gap-3 mt-3 pl-[54px] flex-wrap">
+                  <span className="text-xs text-muted-foreground">{m.dateFull}</span>
                   {m.status === "active" ? (
-                    <>
-                      <span className="bg-[hsl(25,95%,93%)] text-[hsl(25,95%,35%)] text-[10px] tracking-[0.06em] font-medium px-1.5 py-0.5 rounded-md">UPI</span>
-                      <span className="text-xs text-foreground font-mono font-semibold">{m.bank} UPI ••{m.bankMask}</span>
-                    </>
+                    <div className="flex items-center gap-2">
+                      <span className="bg-[hsl(25,95%,93%)] text-[hsl(25,95%,35%)] text-[10px] tracking-[0.06em] font-semibold px-1.5 py-0.5 rounded-md">UPI</span>
+                      <span className="text-xs text-foreground font-mono font-semibold">{m.bank} ••{m.bankMask}</span>
+                    </div>
                   ) : <StatusPill status={m.status} />}
                 </div>
-                <div className="text-sm font-bold text-right tabular-nums text-foreground">₹{m.amount.toLocaleString("en-IN")}</div>
-                <div className="w-8 h-8 rounded-full grid place-items-center text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all">
-                  <ChevronRight className="w-3.5 h-3.5" strokeWidth={2.5} />
-                </div>
-              </div>
+              </button>
             ))}
             {locked.map((m) => (
-              <div key={m.id} className="grid grid-cols-[2fr_1fr_1.2fr_auto_36px] gap-4 items-center px-6 py-4 border-b border-border/30 last:border-0">
+              <div key={m.id} className="w-full px-5 sm:px-6 py-4 border-b border-border/30 last:border-0">
                 <div className="flex items-center gap-3.5 blur-[5px] select-none pointer-events-none">
                   <Logo k={m.logo} />
-                  <div>
-                    <div className="font-semibold text-sm">{m.name}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{m.cat}</div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-semibold text-sm text-foreground">{m.name}</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">{m.cycle} · {m.cat}</div>
                   </div>
+                  <div className="text-base font-bold tabular-nums text-foreground">₹{m.amount}</div>
                 </div>
-                <div className="text-sm blur-[5px] select-none">{m.dateFull}</div>
-                <div className="flex items-center gap-2 blur-[5px] select-none">
+                <div className="flex items-center gap-3 mt-3 pl-[54px] blur-[5px] select-none">
+                  <span className="text-xs text-muted-foreground">{m.dateFull}</span>
                   <span className="bg-[hsl(25,95%,93%)] text-[hsl(25,95%,35%)] text-[10px] px-1.5 py-0.5 rounded-md">UPI</span>
-                  <span className="text-xs font-mono">{m.bank} UPI ••{m.bankMask}</span>
                 </div>
-                <div className="text-sm font-bold text-right blur-[5px] select-none">₹{m.amount}</div>
-                <div className="w-8 h-8 grid place-items-center text-muted-foreground"><ChevronRight className="w-3.5 h-3.5" /></div>
               </div>
             ))}
           </div>
 
           {!isPremium && locked.length > 0 && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none pt-12">
-              <div className="bg-card/95 backdrop-blur-sm px-9 py-8 rounded-[20px] text-center max-w-[460px] pointer-events-auto shadow-[0_24px_60px_-20px_rgba(0,0,0,0.18)] border border-border/30">
-                <div className="w-16 h-16 rounded-[18px] bg-primary grid place-items-center mx-auto mb-5 text-primary-foreground">
-                  <Lock className="w-7 h-7" strokeWidth={2.2} />
+              <div className="bg-card/95 backdrop-blur-sm px-7 sm:px-9 py-7 sm:py-8 mx-4 rounded-[20px] text-center max-w-[460px] pointer-events-auto shadow-[0_24px_60px_-20px_rgba(0,0,0,0.18)] border border-border/30">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-[18px] bg-primary grid place-items-center mx-auto mb-4 sm:mb-5 text-primary-foreground">
+                  <Lock className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={2.2} />
                 </div>
-                <div className="text-display text-[22px] mb-2.5">See all {list.length} mandates</div>
-                <div className="text-body text-sm mb-5">
+                <div className="text-display text-[18px] sm:text-[22px] mb-2 sm:mb-2.5">See all {list.length} mandates</div>
+                <div className="text-body text-[13px] sm:text-sm mb-5">
                   Go Premium to see every autopay across banks, get price-change alerts, and access cancellation guides for every UPI app.
                 </div>
-                <button onClick={onUpgrade} className="h-[46px] px-[26px] rounded-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm inline-flex items-center gap-2 transition">
+                <button onClick={onUpgrade} className="h-11 sm:h-[46px] px-6 sm:px-[26px] rounded-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm inline-flex items-center gap-2 transition">
                   Upgrade to Premium <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={2.5} />
                 </button>
               </div>
-            </div>
-          )}
-        </div>
-
-        {/* mobile cards */}
-        <div className="md:hidden relative">
-          {visible.map((m) => (
-            <button key={m.id} onClick={() => onSelect(m)} className="w-full px-4 py-3.5 grid grid-cols-[1fr_auto] gap-x-3 gap-y-1.5 items-center text-left border-b border-border/30 last:border-0">
-              <div className="col-span-2 flex items-center gap-3">
-                <Logo k={m.logo} />
-                <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-sm text-foreground truncate">{m.name}</div>
-                  <div className="text-xs text-muted-foreground mt-0.5">{m.cycle} · {m.dateFull}</div>
-                </div>
-                <div className="text-sm font-bold tabular-nums text-foreground">₹{m.amount}</div>
-              </div>
-            </button>
-          ))}
-          {locked.length > 0 && (
-            <div className="p-6 text-center">
-              <div className="w-14 h-14 rounded-2xl bg-primary grid place-items-center mx-auto mb-3 text-primary-foreground">
-                <Lock className="w-6 h-6" strokeWidth={2.2} />
-              </div>
-              <div className="text-display text-[18px] mb-2">See all {list.length} mandates</div>
-              <div className="text-body text-[13px] mb-4">Upgrade to Premium for full access.</div>
-              <button onClick={onUpgrade} className="h-11 px-6 rounded-full bg-primary text-primary-foreground font-semibold text-sm inline-flex items-center gap-2">
-                Upgrade <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={2.5} />
-              </button>
             </div>
           )}
         </div>
