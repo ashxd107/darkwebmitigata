@@ -15,6 +15,7 @@ import LockedOverlay from "@/components/dashboard/LockedOverlay";
 import UnlockPaymentModal from "@/components/dashboard/UnlockPaymentModal";
 import ComprehensiveReport from "@/components/dashboard/comprehensive/ComprehensiveReport";
 import MitigataChatbot from "@/components/dashboard/MitigataChatbot";
+import AutopayDashboard from "@/components/dashboard/autopay/AutopayDashboard";
 import type { FlowType } from "@/types/flow";
 
 const Dashboard = () => {
@@ -106,6 +107,8 @@ const Dashboard = () => {
             <InsurancePage onGetStarted={() => setInsuranceOpen(true)} />
           </div>
         );
+      case "autopay":
+        return <AutopayDashboard isUnlocked={isUnlocked} onUnlock={handleUnlock} />;
       default:
         return null;
     }
