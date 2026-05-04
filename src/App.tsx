@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import FlowSelector from "./pages/FlowSelector.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import AutopayPage from "./pages/Autopay.tsx";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
           <Route path="/" element={<Navigate to="/flow" replace />} />
           <Route path="/flow" element={<FlowSelector />} />
           <Route path="/dashboard/:flow" element={<Dashboard />} />
+          <Route path="/autopay" element={<AutopayPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
