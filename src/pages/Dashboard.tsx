@@ -14,6 +14,7 @@ import InsuranceSuccess from "@/components/dashboard/InsuranceSuccess";
 import LockedOverlay from "@/components/dashboard/LockedOverlay";
 import UnlockPaymentModal from "@/components/dashboard/UnlockPaymentModal";
 import ComprehensiveReport from "@/components/dashboard/comprehensive/ComprehensiveReport";
+import MitigataChatbot from "@/components/dashboard/MitigataChatbot";
 import type { FlowType } from "@/types/flow";
 
 const Dashboard = () => {
@@ -137,6 +138,7 @@ const Dashboard = () => {
         <UnlockPaymentModal open={paymentModalOpen} onClose={() => setPaymentModalOpen(false)} onSuccess={handlePaymentSuccess} />
       )}
       <InsuranceSuccess open={insuranceSuccess} onClose={() => setInsuranceSuccess(false)} />
+      {activeItem === "overview" && <MitigataChatbot />}
     </div>
   );
 };

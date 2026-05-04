@@ -14,6 +14,7 @@ import InsuranceSuccess from "@/components/dashboard/InsuranceSuccess";
 import UnlockCTA from "@/components/dashboard/UnlockCTA";
 import LockedOverlay from "@/components/dashboard/LockedOverlay";
 import UnlockPaymentModal from "@/components/dashboard/UnlockPaymentModal";
+import MitigataChatbot from "@/components/dashboard/MitigataChatbot";
 
 const Index = () => {
   const [activeItem, setActiveItem] = useState("overview");
@@ -122,6 +123,7 @@ const Index = () => {
       )}
       <InsuranceFlow open={insuranceOpen} onClose={() => setInsuranceOpen(false)} onSuccess={handleInsuranceComplete} />
       <UnlockPaymentModal open={paymentModalOpen} onClose={() => setPaymentModalOpen(false)} onSuccess={handlePaymentSuccess} />
+      {activeItem === "overview" && <MitigataChatbot />}
     </div>
   );
 };
