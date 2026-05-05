@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import {
-  Menu, TrendingUp, Search, Bell, Filter, Download, Lock, ChevronRight,
+  TrendingUp, Search, Bell, Filter, Download, Lock, ChevronRight,
   ArrowUpRight, User, ShieldCheck, Plus, Info, LogOut, Star, CreditCard, X
 } from "lucide-react";
 import mitigataLogo from "@/assets/mitigata-logo.png";
