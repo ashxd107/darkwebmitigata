@@ -209,7 +209,19 @@ const PaymentsView = ({ isPremium, onSelect, onUpgrade }: {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-[18px]">
+      {/* Mobile hero */}
+      <HeroStat
+        label="Monthly total"
+        value="₹3,553"
+        meta={<><span className="text-primary font-semibold">+₹179</span> vs last month</>}
+      />
+      {/* Mobile 2-up secondary cards */}
+      <div className="grid grid-cols-2 gap-3 md:hidden">
+        <StatCard label="Upcoming 7 days" value="₹1,198" meta="4 payments · Adobe debits tomorrow" />
+        <StatCard label="Price changes" value="+₹70" accent="warn" badge="2" meta="Netflix +₹50, Spotify +₹20" />
+      </div>
+      {/* Desktop 3-up */}
+      <div className="hidden md:grid grid-cols-3 gap-[18px]">
         <StatCard label="Monthly total" value="₹3,553" meta={<><span className="text-primary font-semibold">+₹179</span> vs last month</>} />
         <StatCard label="Upcoming 7 days" value="₹1,198" meta="4 payments · Adobe debits tomorrow" />
         <StatCard label="Price changes" value="+₹70" accent="warn" badge="2" meta="Netflix +₹50, Spotify +₹20" />
