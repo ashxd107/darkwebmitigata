@@ -393,7 +393,12 @@ const InsightsView = () => {
   const inactive = mandates.filter(m => m.status !== "active");
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-[18px]">
+      <HeroStat label="Lifetime spent" value="₹47,231" meta="Across 9 services since Sep 2023" />
+      <div className="grid grid-cols-2 gap-3 md:hidden">
+        <StatCard label="Yearly commitments" value="₹4,788" suffix="/yr" meta="Disney+ renews Aug 2026" />
+        <StatCard label="Saved by cancelling" value="₹3,096" accent="savings" meta="YouTube + Audible" />
+      </div>
+      <div className="hidden md:grid grid-cols-3 gap-[18px]">
         <StatCard label="Lifetime spent" value="₹47,231" meta="Across 9 services since Sep 2023" />
         <StatCard label="Yearly commitments" value="₹4,788" suffix="/yr" meta="Disney+ renews Aug 2026" />
         <StatCard label="Saved by cancelling" value="₹3,096" accent="savings" meta="YouTube + Audible" />
