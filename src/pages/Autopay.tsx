@@ -171,6 +171,18 @@ const StatCard = ({
   );
 };
 
+/* ============== Mobile hero stat (large centered) ============== */
+
+const HeroStat = ({ label, value, meta, valueClass = "" }: {
+  label: string; value: string; meta: React.ReactNode; valueClass?: string;
+}) => (
+  <div className="md:hidden text-center py-6 px-4">
+    <div className="text-[15px] text-muted-foreground font-medium mb-3">{label}</div>
+    <div className={`text-display text-[68px] leading-none tracking-tight tabular-nums mb-3 ${valueClass}`}>{value}</div>
+    <div className="text-[14px] text-muted-foreground font-medium">{meta}</div>
+  </div>
+);
+
 /* ============== Payments view ============== */
 
 const PaymentsView = ({ isPremium, onSelect, onUpgrade }: {
