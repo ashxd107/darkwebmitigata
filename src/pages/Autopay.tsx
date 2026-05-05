@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import {
-  Menu, TrendingUp, Search, Bell, Filter, Download, Lock, ChevronRight,
+  TrendingUp, Search, Bell, Filter, Download, Lock, ChevronRight,
   ArrowUpRight, User, ShieldCheck, Plus, Info, LogOut, Star, CreditCard, X
 } from "lucide-react";
 import mitigataLogo from "@/assets/mitigata-logo.png";
@@ -114,14 +114,17 @@ const Topbar = ({
 }: { view: View; isPremium: boolean; setIsPremium: (b: boolean) => void; onMobileMenu: () => void }) => {
   const titles: Record<View, string> = { payments: "Recurring Payments", insights: "Spending Insights", profile: "Profile" };
   return (
-    <div className="flex items-end justify-between gap-6 mb-7 flex-wrap">
+    <div className="flex items-end justify-between gap-6 mb-6 lg:mb-7 flex-wrap">
       <div className="flex items-center gap-3">
-        <button onClick={onMobileMenu} className="lg:hidden w-10 h-10 rounded-xl bg-secondary/60 grid place-items-center text-foreground">
-          <Menu className="w-5 h-5" />
-        </button>
-        <div>
+        {/* Desktop: greeting + title */}
+        <div className="hidden lg:block">
           <div className="text-[13px] text-muted-foreground font-medium mb-1">Good morning, Rahul</div>
-          <h1 className="text-display text-[24px] lg:text-[30px] leading-[1.1]">{titles[view]}</h1>
+          <h1 className="text-display text-[30px] leading-[1.1]">{titles[view]}</h1>
+        </div>
+        {/* Mobile: small section label, then big greeting */}
+        <div className="lg:hidden">
+          <div className="text-[13px] text-muted-foreground font-medium mb-1">{titles[view]}</div>
+          <h1 className="text-display text-[26px] leading-[1.1]">Good morning, Rahul</h1>
         </div>
       </div>
 
@@ -168,6 +171,18 @@ const StatCard = ({
   );
 };
 
+/* ============== Mobile hero stat (large centered) ============== */
+
+const HeroStat = ({ label, value, meta, valueClass = "" }: {
+  label: string; value: string; meta: React.ReactNode; valueClass?: string;
+}) => (
+  <div className="md:hidden text-center py-6 px-4">
+    <div className="text-[15px] text-muted-foreground font-medium mb-3">{label}</div>
+    <div className={`text-display text-[68px] leading-none tracking-tight tabular-nums mb-3 ${valueClass}`}>{value}</div>
+    <div className="text-[14px] text-muted-foreground font-medium">{meta}</div>
+  </div>
+);
+
 /* ============== Payments view ============== */
 
 const PaymentsView = ({ isPremium, onSelect, onUpgrade }: {
@@ -194,7 +209,19 @@ const PaymentsView = ({ isPremium, onSelect, onUpgrade }: {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-[18px]">
+      {/* Mobile hero */}
+      <HeroStat
+        label="Monthly total"
+        value="₹3,553"
+        meta={<><span className="text-primary font-semibold">+₹179</span> vs last month</>}
+      />
+      {/* Mobile 2-up secondary cards */}
+      <div className="grid grid-cols-2 gap-3 md:hidden">
+        <StatCard label="Upcoming 7 days" value="₹1,198" meta="4 payments · Adobe debits tomorrow" />
+        <StatCard label="Price changes" value="+₹70" accent="warn" badge="2" meta="Netflix +₹50, Spotify +₹20" />
+      </div>
+      {/* Desktop 3-up */}
+      <div className="hidden md:grid grid-cols-3 gap-[18px]">
         <StatCard label="Monthly total" value="₹3,553" meta={<><span className="text-primary font-semibold">+₹179</span> vs last month</>} />
         <StatCard label="Upcoming 7 days" value="₹1,198" meta="4 payments · Adobe debits tomorrow" />
         <StatCard label="Price changes" value="+₹70" accent="warn" badge="2" meta="Netflix +₹50, Spotify +₹20" />
@@ -366,7 +393,12 @@ const InsightsView = () => {
   const inactive = mandates.filter(m => m.status !== "active");
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-[18px]">
+      <HeroStat label="Lifetime spent" value="₹47,231" meta="Across 9 services since Sep 2023" />
+      <div className="grid grid-cols-2 gap-3 md:hidden">
+        <StatCard label="Yearly commitments" value="₹4,788" suffix="/yr" meta="Disney+ renews Aug 2026" />
+        <StatCard label="Saved by cancelling" value="₹3,096" accent="savings" meta="YouTube + Audible" />
+      </div>
+      <div className="hidden md:grid grid-cols-3 gap-[18px]">
         <StatCard label="Lifetime spent" value="₹47,231" meta="Across 9 services since Sep 2023" />
         <StatCard label="Yearly commitments" value="₹4,788" suffix="/yr" meta="Disney+ renews Aug 2026" />
         <StatCard label="Saved by cancelling" value="₹3,096" accent="savings" meta="YouTube + Audible" />
@@ -415,12 +447,12 @@ const InsightsView = () => {
 
 const ProfileView = ({ onAddBank }: { onAddBank: () => void }) => (
   <div className="space-y-[18px]">
-    <div className="card-surface flex items-center gap-5 flex-wrap">
-      <div className="w-16 h-16 rounded-full bg-secondary text-foreground grid place-items-center font-bold text-[22px]">R</div>
+    <div className="card-surface flex flex-col md:flex-row md:items-center gap-5 text-center md:text-left">
+      <div className="w-20 h-20 md:w-16 md:h-16 rounded-full bg-secondary text-foreground grid place-items-center font-bold text-[26px] md:text-[22px] mx-auto md:mx-0">R</div>
       <div className="flex-1 min-w-0">
-        <div className="text-display text-[22px]">Rahul Kumar</div>
+        <div className="text-display text-[24px] md:text-[22px]">Rahul Kumar</div>
         <div className="text-body text-[13px] mt-1">rahul.k@icloud.com · +91 73382 70444</div>
-        <div className="flex gap-2 mt-2.5 flex-wrap">
+        <div className="flex gap-2 mt-2.5 flex-wrap justify-center md:justify-start">
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground">
             <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground" />Free plan
           </span>
@@ -429,21 +461,20 @@ const ProfileView = ({ onAddBank }: { onAddBank: () => void }) => (
           </span>
         </div>
       </div>
-      <button className="ml-auto h-11 px-5 rounded-full bg-foreground hover:opacity-90 text-background font-semibold text-sm inline-flex items-center gap-2 transition">
+      <button className="md:ml-auto h-12 md:h-11 px-5 rounded-full bg-foreground hover:opacity-90 text-background font-semibold text-sm inline-flex items-center justify-center gap-2 transition w-full md:w-auto">
         <Star className="w-3.5 h-3.5" />Upgrade to Pro
       </button>
     </div>
 
     <div className="card-surface">
-      <div className="flex justify-between items-start mb-5 gap-3 flex-wrap">
-        <div>
-          <div className="text-display text-base">Connected banks</div>
-          <div className="text-body text-xs mt-1">2 banks · 8 mandates total</div>
-        </div>
-        <button onClick={onAddBank} className="h-9 px-4 rounded-full border border-border/60 text-foreground text-[13px] font-semibold inline-flex items-center gap-2 hover:bg-secondary/60 transition">
-          <Plus className="w-3.5 h-3.5" strokeWidth={2.5} />Add bank
-        </button>
+      <div className="mb-4">
+        <div className="text-display text-base">Connected banks</div>
+        <div className="text-body text-xs mt-1">2 banks · 8 mandates total</div>
       </div>
+
+      <button onClick={onAddBank} className="w-full h-12 mb-2 rounded-full border border-border/60 text-foreground text-sm font-semibold inline-flex items-center justify-center gap-2 hover:bg-secondary/60 transition">
+        <Plus className="w-4 h-4" strokeWidth={2.5} />Add bank
+      </button>
 
       <div className="divide-y divide-border/30">
         {[
