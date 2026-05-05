@@ -114,14 +114,17 @@ const Topbar = ({
 }: { view: View; isPremium: boolean; setIsPremium: (b: boolean) => void; onMobileMenu: () => void }) => {
   const titles: Record<View, string> = { payments: "Recurring Payments", insights: "Spending Insights", profile: "Profile" };
   return (
-    <div className="flex items-end justify-between gap-6 mb-7 flex-wrap">
+    <div className="flex items-end justify-between gap-6 mb-6 lg:mb-7 flex-wrap">
       <div className="flex items-center gap-3">
-        <button onClick={onMobileMenu} className="lg:hidden w-10 h-10 rounded-xl bg-secondary/60 grid place-items-center text-foreground">
-          <Menu className="w-5 h-5" />
-        </button>
-        <div>
+        {/* Desktop: greeting + title */}
+        <div className="hidden lg:block">
           <div className="text-[13px] text-muted-foreground font-medium mb-1">Good morning, Rahul</div>
-          <h1 className="text-display text-[24px] lg:text-[30px] leading-[1.1]">{titles[view]}</h1>
+          <h1 className="text-display text-[30px] leading-[1.1]">{titles[view]}</h1>
+        </div>
+        {/* Mobile: small section label, then big greeting */}
+        <div className="lg:hidden">
+          <div className="text-[13px] text-muted-foreground font-medium mb-1">{titles[view]}</div>
+          <h1 className="text-display text-[26px] leading-[1.1]">Good morning, Rahul</h1>
         </div>
       </div>
 
